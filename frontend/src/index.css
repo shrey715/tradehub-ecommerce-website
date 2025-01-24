@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Pacifico';
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Pacifico/Pacifico-Regular.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Noto Sans';
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Noto_Sans/NotoSans-VariableFont_wdth,wght.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Poppins';
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Barriecito';
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Barriecito/Barriecito-Regular.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Rubik/Rubik-VariableFont_wght.ttf') format('truetype');
+  }
+}
+
+* {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) var(--color-secondary);
+  
+  -webkit-scrollbar-width: thin;
+  -webkit-scrollbar-color: var(--color-primary) var(--color-secondary);
+
+  -moz-osx-scrollbar-width: thin;
+  -moz-osx-scrollbar-color: var(--color-primary) var(--color-secondary);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-background);
+}
+
+:root {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-primary: #18181b;
+  --color-secondary: #27272a;
+  --color-background: #fff;
+}
+
+.auth-background {
+  background: url('/backgrounds/auth.svg') no-repeat center center/cover;
+}
