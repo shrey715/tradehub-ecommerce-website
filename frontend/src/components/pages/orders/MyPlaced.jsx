@@ -71,7 +71,11 @@ const MyPlaced = () => {
                   <td className="border-b p-2">
                     {new Date(order.date).toLocaleDateString()} {new Date(order.date).toLocaleTimeString()}
                   </td>
-                  <td className="border-b p-2">{order.status}</td>
+                  <td className="border-b p-2">
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
+                      {order.status}
+                    </span>
+                  </td>
                   <td className="border-b p-2">
                     <button className="bg-zinc-900 text-white p-1 rounded-md" onClick={() => handleRegenerateOTP(order._id)}>Regenerate OTP</button>
                   </td>

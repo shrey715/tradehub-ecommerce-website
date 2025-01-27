@@ -65,6 +65,12 @@ const Cart = () => {
 
   const clearCart = async () => {
     const token = localStorage.getItem("jwtToken");
+
+    if (cart.length === 0) {
+      toast.error("Cart is already empty");
+      return;
+    }
+
     try {
       const res = await axios.delete(`${backendUrl}/api/cart/clear-cart`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -115,90 +121,95 @@ const Cart = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="w-full h-full p-2"
+      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>My Cart | TradeHub</title>
       </Helmet>
-      <div className="px-6 w-full h-full">
-        <h2 className="text-3xl font-light text-left">My Cart</h2>
-        <hr className="my-4 border-t border-gray-300" />
-        <div className="flex flex-col md:flex-row justify-between item-start gap-4">
-          <div className="flex flex-col gap-4 w-full md:w-2/3">
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
+        <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">My Cart</h2>
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex-1 space-y-4">
             {cart.map((item) => (
-              <div key={item._id} className="flex flex-col md:flex-row gap-4 w-full border border-zinc-900 p-4">
-                <img
-                  src={`https://picsum.photos/seed/${item._id}/200/300`}
-                  alt={item.name}
-                  className="w-full md:w-1/3 h-48 object-cover"
-                />
-                <div className="flex flex-col justify-between w-full md:w-2/3">
-                  <div className="flex flex-col md:flex-row justify-between">
-                    <div>
-                      <h3 className="text-2xl font-light text-left">
-                        <span className="font-normal">Item: </span>
-                        {item.name}
-                      </h3>
-                      <h3 className="text-2xl font-light text-left">
-                        <span className="font-normal">Price: </span>
-                        &#8377; {item.price}
-                      </h3>
-                      <h3 className="text-2xl font-light text-left">
-                        <span className="font-normal">Quantity: </span>
-                        {item.quantity}
-                      </h3>
-                      <h3 className="text-2xl font-light text-left">
-                        <span className="font-normal">Total: </span>
-                        &#8377; {item.price * item.quantity}
-                      </h3>
-                      <hr className="my-2 border-t border-gray-300" />
-                      <p className="text-lg font-light text-left">
-                        <span className="font-normal">Category: </span>
-                        {item.category.join(", ")}
-                      </p>
-                      <p className="text-lg font-light text-left">
-                        <span className="font-normal">Seller: </span>
-                        {item.seller_name}
-                      </p>
+              <div 
+                key={item._id} 
+                className="group rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <div className="flex flex-col md:flex-row p-4 gap-6">
+                  <div className="w-full md:w-1/3">
+                    <img
+                      src={`https://picsum.photos/seed/${item._id}/200/300`}
+                      alt={item.name}
+                      className="w-full h-48 object-cover rounded-md"
+                    />
+                  </div>
+                  <div className="flex-1 space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">{item.name}</h3>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div className="text-zinc-500 dark:text-zinc-400">Price:</div>
+                        <div className="font-medium text-zinc-900 dark:text-zinc-50">₹{item.price}</div>
+                        <div className="text-zinc-500 dark:text-zinc-400">Quantity:</div>
+                        <div className="font-medium text-zinc-900 dark:text-zinc-50">{item.quantity}</div>
+                        <div className="text-zinc-500 dark:text-zinc-400">Total:</div>
+                        <div className="font-medium text-zinc-900 dark:text-zinc-50">₹{item.price * item.quantity}</div>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => removeFromCart(item._id)}
-                      className="flex items-center self-end bg-zinc-900 text-white font-semibold py-2 px-4 border hover:bg-red-600 transition-colors duration-75 mt-4 md:mt-0"
-                    >
-                      <CiTrash className="mr-2" size={28} />
-                      Remove
-                    </button>
+                    
+                    <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800">
+                      <div className="flex justify-between items-center">
+                        <div className="space-y-1">
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                            Category: {item.category.join(", ")}
+                          </p>
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                            Seller: {item.seller_name}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => removeFromCart(item._id)}
+                          className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors"
+                        >
+                          <CiTrash className="mr-2" size={20} />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
-            {
-              cart.length === 0 && (
-                <div className="flex justify-center items-center w-full h-48 border border-zinc-900 p-4">
-                  <h3 className="text-2xl font-light text-left">
-                    Your cart is empty
-                  </h3>
-                </div>
-              )
-            }
+            {cart.length === 0 && (
+              <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-12">
+                <p className="text-center text-zinc-600 dark:text-zinc-400">Your cart is empty</p>
+              </div>
+            )}
           </div>
-          <div className="flex flex-col gap-4 w-full md:w-1/3 border border-zinc-900 p-4">
-            <h3 className="text-2xl font-light text-left">
-              <span className="font-normal">Total Bill: </span>
-              &#8377; {total}
-            </h3>
-            <button
-              onClick={clearCart}
-              className="bg-white text-zinc-900 font-semibold py-2 px-4 border border-zinc-900 hover:bg-zinc-200 transition-colors duration-75"
-            >
-              Clear Cart
-            </button>
-            <button
-              onClick={placeOrder}
-              className="bg-zinc-900 text-white font-semibold py-2 px-4 border border-zinc-900 hover:bg-zinc-700 transition-colors duration-75"
-            >
-              Continue to checkout
-            </button>
+
+          <div className="w-full lg:w-80 space-y-4">
+            <div className="sticky top-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm">
+              <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-50 mb-4">Order Summary</h3>
+              <div className="space-y-1.5 mb-6">
+                <div className="flex justify-between">
+                  <span className="text-zinc-500 dark:text-zinc-400">Total</span>
+                  <span className="font-medium text-zinc-900 dark:text-zinc-50">₹{total}</span>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <button
+                  onClick={placeOrder}
+                  className="w-full py-2 px-4 rounded-md bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors"
+                >
+                  Continue to checkout
+                </button>
+                <button
+                  onClick={clearCart}
+                  className="w-full py-2 px-4 rounded-md border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                >
+                  Clear Cart
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

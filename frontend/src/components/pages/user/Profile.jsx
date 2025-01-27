@@ -2,20 +2,13 @@ import { Helmet } from "react-helmet";
 import { useState } from "react";
 import useUserStore from "../../../hooks/UserStore";
 import PropTypes from 'prop-types';
-
 import { AnimatePresence, motion } from "motion/react";
 import { CiEdit, CiCircleRemove } from "react-icons/ci";
-
 import axios from "axios";
 import { backendUrl } from "../../../main";
-
 import toast from "react-hot-toast";
 
 const EditModal = ({ setEditMode }) => {
-  const handleClose = () => {
-    setEditMode(false);
-  }
-
   const { user, setUser } = useUserStore();
   const [fname, setFname] = useState(user.fname || '');
   const [lname, setLname] = useState(user.lname || '');
@@ -23,16 +16,14 @@ const EditModal = ({ setEditMode }) => {
   const [email, setEmail] = useState(user.email || '');
   const [contactNo, setContactNo] = useState(user.contact_no || '');
 
+  const handleClose = () => setEditMode(false);
+
   const handleUpdate = async () => {
     const token = localStorage.getItem("jwtToken");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-    };
-
-    const body = JSON.stringify({ fname, lname, age, email, contact_no: contactNo });
+    if (!token) {
+      toast.error("Unauthorized");
+      return;
+    }
 
     if (!fname || !lname || !age || !email || !contactNo) {
       toast.error("Please fill in all fields");
@@ -50,13 +41,17 @@ const EditModal = ({ setEditMode }) => {
       return;
     }
 
-    if (!token) {
-      toast.error("Unauthorized");
-      return;
-    }
-    
     try {
-      const res = await axios.patch(`${backendUrl}/api/user`, body, config);
+      const res = await axios.patch(
+        `${backendUrl}/api/user`,
+        { fname, lname, age, email, contact_no: contactNo },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      );
 
       if (res.data.success) {
         setUser(res.data.user);
@@ -69,79 +64,108 @@ const EditModal = ({ setEditMode }) => {
       console.error(error);
       toast.error("Failed to update profile");
     }
-  }
+  };
 
   return (
-    <AnimatePresence exitBeforeEnter>
+    <AnimatePresence>
       <motion.div 
-        className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex flex-col justify-center items-center"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="w-full h-fit p-2 md:w-1/2 lg:w-1/3 flex flex-col justify-center items-center"
-          initial={{ scale: 0 }}
+          className="w-full max-w-md mx-4"
+          initial={{ scale: 0.95 }}
           animate={{ scale: 1 }}
-          exit={{ scale: 0 }}
+          exit={{ scale: 0.95 }}
         >
-          <div className="flex flex-col justify-start items-center w-full h-fit p-2 gap-2 bg-white rounded-md">
-            <div className="flex flex-row justify-between items-center w-full p-2 border-b border-gray-300">
-              <h2 className="text-2xl font-light text-left">Edit Profile</h2>
-              <span onClick={handleClose} className="text-2xl text-zinc-900 cursor-pointer">
-                <CiCircleRemove size={32} />
-              </span>
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg overflow-hidden">
+            <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-800">
+              <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">Edit Profile</h2>
+              <button
+                onClick={handleClose}
+                className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors"
+              >
+                <CiCircleRemove size={24} />
+              </button>
             </div>
-            <div className="flex flex-col justify-center items-center w-full p-2 gap-2">
-              <label className="text-lg font-normal text-left w-full">First Name:</label>
-              <input
-                type="text"
-                className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
-                value={fname}
-                onChange={(e) => setFname(e.target.value)}
-              />
-              <label className="text-lg font-normal text-left w-full">Last Name:</label>
-              <input
-                type="text"
-                className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
-                value={lname}
-                onChange={(e) => setLname(e.target.value)}
-              />
-              <label className="text-lg font-normal text-left w-full">Age:</label>
-              <input
-                type="number"
-                className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-              />
-              <label className="text-lg font-normal text-left w-full">Email:</label>
-              <input
-                type="email"
-                className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                readOnly
-              />
-              <label className="text-lg font-normal text-left w-full">Contact Number:</label>
-              <input
-                type="text"
-                className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
-                value={contactNo}
-                onChange={(e) => setContactNo(e.target.value)}
-              />
-              <div className="flex flex-row justify-center items-center w-full gap-2 mt-4">
-                <span onClick={handleUpdate} className="flex flex-row justify-center items-center w-full gap-2 p-2 bg-zinc-900 text-white rounded-md cursor-pointer">
-                  <CiEdit className="text-2xl" />
-                  <span className="text-lg font-normal">Update</span>
-                </span>
-              </div>  
+            
+            <div className="p-4 space-y-4">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">First Name</label>
+                  <input
+                    type="text"
+                    value={fname}
+                    onChange={(e) => setFname(e.target.value)}
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Last Name</label>
+                  <input
+                    type="text"
+                    value={lname}
+                    onChange={(e) => setLname(e.target.value)}
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Age</label>
+                  <input
+                    type="number"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    readOnly
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/50 text-zinc-900 dark:text-zinc-50 cursor-not-allowed"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Contact Number</label>
+                  <input
+                    type="text"
+                    value={contactNo}
+                    onChange={(e) => setContactNo(e.target.value)}
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 p-4 border-t border-zinc-200 dark:border-zinc-800">
+              <button
+                onClick={handleClose}
+                className="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
+              >
+                Update Profile
+              </button>
             </div>
           </div>
         </motion.div>
       </motion.div>
     </AnimatePresence>
   );
-} 
+};
 
 EditModal.propTypes = {
   setEditMode: PropTypes.func.isRequired
@@ -151,44 +175,68 @@ const Profile = () => {
   const { user } = useUserStore();
   const [editMode, setEditMode] = useState(false);
 
-  const handleEdit = () => {
-    setEditMode(true);
-  }
-
   return (
     <motion.div
-      className="w-full h-full p-2"
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
+      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
     >     
       <Helmet>
         <title>Profile | TradeHub</title>
       </Helmet>
-      <div className="px-6 w-full h-full">
-        <h2 className="text-3xl font-light text-left">Hello {user.fname}!</h2>
-        <hr className="my-4 border-t border-gray-300" />
-        <div className="flex flex-col justify-center items-center w-full h-full p-2 gap-2">
-          <div className="flex flex-col justify-center items-center w-full md:w-2/3 lg:w-1/2 p-2 gap-2 border border-zinc-900 rounded-md">
-            <label className="text-lg font-normal text-left w-full">First Name:</label>
-            <span className="text-lg font-light text-left w-full px-5">{user.fname}</span>
-            <label className="text-lg font-normal text-left w-full">Last Name:</label>
-            <span className="text-lg font-light text-left w-full px-5">{user.lname}</span>
-            <label className="text-lg font-normal text-left w-full">Age:</label>
-            <span className="text-lg font-light text-left w-full px-5">{user.age}</span>
-            <label className="text-lg font-normal text-left w-full">Email:</label>
-            <span className="text-lg font-light text-left w-full px-5">{user.email}</span>
-            <label className="text-lg font-normal text-left w-full">Contact Number:</label>
-            <span className="text-lg font-light text-left w-full px-5">{user.contact_no}</span>
-            <div className="flex flex-row justify-center items-center w-full gap-2 mt-4">
-              <span onClick={handleEdit} className="flex flex-row justify-center items-center w-full gap-2 p-2 bg-zinc-900 text-white rounded-md cursor-pointer">
-                <CiEdit className="text-2xl" />
-                <span className="text-lg font-normal">Edit</span>
-              </span>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Profile
+            </h1>
+          </div>
+
+          <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">First Name</label>
+                  <p className="text-lg text-zinc-900 dark:text-zinc-50">{user.fname}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Last Name</label>
+                  <p className="text-lg text-zinc-900 dark:text-zinc-50">{user.lname}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Age</label>
+                  <p className="text-lg text-zinc-900 dark:text-zinc-50">{user.age}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Email</label>
+                  <p className="text-lg text-zinc-900 dark:text-zinc-50">{user.email}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Contact Number</label>
+                  <p className="text-lg text-zinc-900 dark:text-zinc-50">{user.contact_no}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-zinc-200 dark:border-zinc-800">
+              <button
+                onClick={() => setEditMode(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
+              >
+                <CiEdit className="text-lg" />
+                Edit Profile
+              </button>
             </div>
           </div>
         </div>
       </div>
+
       {editMode && <EditModal setEditMode={setEditMode} />}
     </motion.div>
   );

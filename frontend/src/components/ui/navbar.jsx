@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
-import { CiShoppingCart as Cart, CiUser as User, CiShop as Shop, CiMenuBurger as Burger } from "react-icons/ci";
+import { CiShoppingCart as Cart, CiUser as User, CiShop as Shop, CiMenuBurger as Burger, CiCircleQuestion as Support } from "react-icons/ci";
 
 import { Link, useNavigate } from 'react-router';
+
+import Sigma from './sigma';
 
 const BurgerMenu = [
   {
@@ -16,7 +18,7 @@ const BurgerMenu = [
   },
   {
     name: 'Deliver Items',
-    link: '/item/deliver',
+    link: '/deliver',
   },
   {
     name: 'Logout',
@@ -26,6 +28,7 @@ const BurgerMenu = [
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const audioRef = useRef(new Audio('/audio/sigma-boy.mp3'));
@@ -58,7 +61,13 @@ const Navbar = () => {
   };
 
   const handleDoubleClick = () => {
-    audioRef.current.play();
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
   };
 
   const handleClick = () => {
@@ -80,25 +89,51 @@ const Navbar = () => {
       animate={{ opacity: 1 }}
       transition={{ type: 'spring', stiffness: 100 }}
       exit={{ opacity: 0 }}
-      className="top-0 left-0 flex flex-row justify-between items-center h-24 w-full bg-white text-zinc-900 font-sans px-5 py-2"
+      className="sticky top-0 left-0 flex flex-row justify-between items-center h-16 w-full bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-4 lg:px-6 z-50"
     >
-      <div className="flex flex-row items-center">
-        <h1 className="text-4xl font-title font-bold cursor-pointer" onClick={handleClick}>
+      <div className="flex items-center">
+        <h1 
+          onClick={handleClick}
+          className="text-2xl font-title font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 hover:opacity-80 transition-opacity cursor-pointer"
+        >
           TradeHub
         </h1>
       </div>
-      <div className="flex flex-row items-center gap-4 relative">
-        <Link to="/item/all">
-          <Shop className="h-8 w-8 cursor-pointer" />
+
+      <div className="flex items-center gap-2 md:gap-4">
+        <Link 
+          to="/item/all"
+          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <Shop className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
         </Link>
-        <Link to="/user/cart">
-          <Cart className="h-8 w-8 cursor-pointer" />
+        <Link 
+          to="/user/cart"
+          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <Cart className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
         </Link>
-        <Link to="/user/profile"> 
-          <User className="h-8 w-8 cursor-pointer" />
+        <Link 
+          to="/user/profile"
+          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <User className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
         </Link>
+        <Link
+          to="/user/support/"
+          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          <Support className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
+        </Link>
+        
         <div className="relative" ref={dropdownRef}>
-          <Burger className="h-8 w-8 cursor-pointer" onClick={toggleDropdown} />
+          <button
+            onClick={toggleDropdown}
+            className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          >
+            <Burger className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
+          </button>
+
           <AnimatePresence>
             {isDropdownOpen && (
               <motion.div
@@ -106,12 +141,16 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="absolute top-10 right-0 mt-2 w-48 bg-white rounded-md border border-zinc-200 shadow-md"
+                className="absolute top-full right-0 mt-2 w-48 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-lg"
               >
                 <ul className="py-1">
                   {BurgerMenu.map((item, index) => (
-                    <li key={index} className="px-4 py-2 hover:bg-neutral-100 cursor-pointer">
-                      <Link to={item.link} className="block text-zinc-700" onClick={closeDropdown}>
+                    <li key={index}>
+                      <Link
+                        to={item.link}
+                        onClick={closeDropdown}
+                        className="block px-4 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                      >
                         {item.name}
                       </Link>
                     </li>
@@ -122,6 +161,8 @@ const Navbar = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {isPlaying && <Sigma />}
     </motion.nav>
   );
 };

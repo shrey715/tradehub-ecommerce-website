@@ -162,4 +162,74 @@ const fetchOrders = async (req, res) => {
   }
 }
 
-export { regenerateOTP, placeOrder, verifyOrder, fetchOrders };
+// route for fetching only seller orders
+const fetchSellerOrders = async (req, res) => {
+  console.log("Fetching seller orders");
+  try {
+    const userID = req.userID;
+
+    const sellerOrders = await Order.find({ seller_id: userID })
+      .select('-hashed_otp')
+      .populate({
+        path: 'item_id',
+        select: 'name'
+      })
+      .populate({
+        path: 'buyer_id',
+        select: 'fname lname contact_no'
+      });
+
+    console.log(sellerOrders);
+    console.log("Seller orders fetched successfully");
+    res.status(200).json({ success: true, message: 'Seller orders fetched successfully', sellerOrders });
+  } catch (error) {
+    console.error('Error fetching seller orders:', error.message);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+
+// route for fetching one order
+const fetchOrder = async (req, res) => {
+  console.log("Fetching order");
+  try {
+    const order_id = req.params.id;
+    const userID = req.userID;
+
+    if (!order_id) {
+      console.log("Order ID not found");
+      return res.status(400).json({ success: false, message: 'Order ID not found' });
+    }
+
+    const order = await Order.findById(order_id)
+      .populate({
+        path: 'item_id',
+        select: 'name price description'
+      })
+      .populate({
+        path: 'buyer_id',
+        select: 'fname lname email contact_no'
+      })
+      .populate({
+        path: 'seller_id',
+        select: 'fname lname email contact_no'
+      });
+
+    if (!order) {
+      console.log("Order not found");
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+
+    if (order.buyer_id._id.toString() !== userID && order.seller_id._id.toString() !== userID) {
+      console.log("Unauthorized access to order");
+      return res.status(403).json({ success: false, message: 'Unauthorized access' });
+    }
+
+    console.log("Order fetched successfully");
+    res.status(200).json({ success: true, message: 'Order fetched successfully', order });
+  } catch (error) {
+    console.error('Error fetching order:', error.message);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+export { regenerateOTP, placeOrder, verifyOrder, fetchOrders, fetchSellerOrders, fetchOrder };

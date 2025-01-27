@@ -66,7 +66,7 @@ const Register = () => {
 
   return (
     <motion.div 
-      className="flex flex-col justify-center items-center text-center w-full h-full p-8 gap-5"
+      className="flex flex-col justify-center items-center w-full h-full p-8 space-y-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -74,26 +74,28 @@ const Register = () => {
       <Helmet>
         <title>Register | TradeHub</title>
       </Helmet>
-      <h1 className="text-4xl font-bold flex flex-row justify-start items-center gap-3 w-full">
-        <Link to="/" className="text-3xl text-zinc-900 hover:text-zinc-800">
-          <FaArrowCircleLeft />
-        </Link>
-        Register
-      </h1>
+      <div className="flex items-center justify-between w-full">
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
+          <Link to="/" className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors">
+            <FaArrowCircleLeft size={24} />
+          </Link>
+          Register
+        </h1>
+      </div>
       <form id="register-form" className="w-full space-y-4" onSubmit={onSubmit}>
-        <div className="flex space-x-4">
+        <div className="grid grid-cols-2 gap-4">
           <input
             type="text"
             name="fname"
             placeholder="First Name"
-            className="p-2 border-b border-zinc-600 w-1/2 active:outline-none focus:outline-none"
+            className="px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
             required
           />
           <input
             type="text"
             name="lname"
             placeholder="Last Name"
-            className="p-2 border-b border-zinc-600 w-1/2 active:outline-none focus:outline-none"
+            className="px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
             required
           />
         </div>
@@ -101,107 +103,74 @@ const Register = () => {
           type="email"
           name="email"
           placeholder="Email"
-          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
+          className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
           required
         />
-        <input
-          type="number"
-          name="age"
-          placeholder="Age"
-          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
-          required
-        />
-        <input
-          type="tel"
-          name="contact_no"
-          placeholder="Phone Number"
-          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
-          required
-        />
-        <div className="relative w-full">
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            type="number"
+            name="age"
+            placeholder="Age"
+            className="px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+            required
+          />
+          <input
+            type="tel"
+            name="contact_no"
+            placeholder="Phone Number"
+            className="px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+            required
+          />
+        </div>
+        <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
+            className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
             required
           />
           <button
             type="button"
-            className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600"
+            className="absolute inset-y-0 right-0 px-3 flex items-center text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors"
             onClick={togglePasswordVisibility}
           >
             <AnimatePresence>
-              {showPassword ? (
-                <motion.div
-                  key="eye-slash"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  layout
-                >
-                  <FaEyeSlash />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="eye"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  layout
-                >
-                  <FaEye />
-                </motion.div>
-              )}
+              {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
             </AnimatePresence>
           </button>
         </div>
-        <div className="relative w-full">
+        <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             name="confirmPassword"
             placeholder="Confirm Password"
-            className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
+            className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
             required
           />
           <button
             type="button"
-            className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600"
+            className="absolute inset-y-0 right-0 px-3 flex items-center text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors"
             onClick={togglePasswordVisibility}
           >
             <AnimatePresence>
-              {showPassword ? (
-                <motion.div
-                  key="eye-slash"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  layout
-                >
-                  <FaEyeSlash />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="eye"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  layout
-                >
-                  <FaEye />
-                </motion.div>
-              )}
+              {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
             </AnimatePresence>
           </button>
         </div>
         <button
           type="submit"
-          className="w-full px-4 py-2 bg-zinc-900 text-zinc-100 rounded-md hover:bg-zinc-800 transition-colors"
+          className="w-full px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
         >
           Register
         </button>
       </form>
-      <Link to="/auth/login" className="hover:underline">Already have an account? Login</Link>
+      <Link 
+        to="/auth/login" 
+        className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
+      >
+        Already have an account? Login
+      </Link>
     </motion.div>
   );
 }
@@ -243,7 +212,7 @@ const Login = () => {
 
   return (
     <motion.div 
-      className="flex flex-col justify-center items-center text-center w-full h-full p-8 gap-5"
+      className="flex flex-col justify-center items-center w-full h-full p-8 space-y-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -251,66 +220,53 @@ const Login = () => {
       <Helmet>
         <title>Login | TradeHub</title>
       </Helmet>
-      <h1 className="text-4xl font-bold flex flex-row justify-start items-center gap-3 w-full">
-        <Link to="/" className="text-3xl text-zinc-900 hover:text-zinc-800">
-          <FaArrowCircleLeft />
-        </Link>
-        Login
-      </h1>
+      <div className="flex items-center justify-between w-full">
+        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
+          <Link to="/" className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors">
+            <FaArrowCircleLeft size={24} />
+          </Link>
+          Login
+        </h1>
+      </div>
       <form className="w-full space-y-4" id="login-form" onSubmit={onSubmit}>
         <input
           name="email"
           type="email"
           placeholder="Email"
-          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
+          className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
           required
         />
-        <div className="relative w-full">
+        <div className="relative">
           <input
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
+            className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
             required
           />
           <button
             type="button"
-            className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-600"
+            className="absolute inset-y-0 right-0 px-3 flex items-center text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors"
             onClick={togglePasswordVisibility}
           >
             <AnimatePresence>
-              {showPassword ? (
-                <motion.div
-                  key="eye-slash"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  layout
-                >
-                  <FaEyeSlash />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="eye"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  layout
-                >
-                  <FaEye />
-                </motion.div>
-              )}
+              {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
             </AnimatePresence>
           </button>
         </div>
         <button
           type="submit"
-          className="w-full px-4 py-2 bg-zinc-900 text-zinc-100 rounded-md hover:bg-zinc-800 transition-colors"
+          className="w-full px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
         >
           Login
         </button>
       </form>
-      <Link to="/auth/register" className="hover:underline">Don&apos;t have an account? Register</Link>
+      <Link 
+        to="/auth/register" 
+        className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
+      >
+        Don&apos;t have an account? Register
+      </Link>
     </motion.div>
   );
 }
@@ -379,9 +335,9 @@ const AuthLayout = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     > 
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-black/50"></div>
       <div className="flex justify-center items-center p-8 h-full relative">
-        <div className="bg-white p-2 rounded-lg shadow-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/3">
+        <div className="bg-white dark:bg-zinc-900 p-2 rounded-lg shadow-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/3">
           <Outlet />
         </div>
       </div>

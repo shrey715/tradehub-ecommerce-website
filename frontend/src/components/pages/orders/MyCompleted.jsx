@@ -44,7 +44,11 @@ const MyCompleted = () => {
                   <td className="border-b p-2">
                     {new Date(order.date).toLocaleDateString()} {new Date(order.date).toLocaleTimeString()}
                   </td>
-                  <td className="border-b p-2">{order.status}</td>
+                  <td className="border-b p-2">
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                      {order.status}
+                    </span>
+                  </td>
                 </tr>
               ))
             ) : (

@@ -13,10 +13,13 @@ import Protected from './hooks/Protected';
 import User from './components/pages/user/User';
 import Profile from './components/pages/user/Profile';
 import Cart from './components/pages/user/Cart';
+import Support from './components/pages/support/Support';
 
 import ItemPage from './components/pages/items/ItemPage';
 import SellItem from './components/pages/items/SellItem';
 import BuyItems from './components/pages/items/BuyItems';
+import DeliverItem from './components/pages/items/DeliverItems';
+import ItemDeliveryPage from './components/pages/items/ItemDeliveryPage';
 
 import Order from './components/pages/orders/Order';
 import MyPlaced from './components/pages/orders/MyPlaced';
@@ -47,6 +50,7 @@ createRoot(document.getElementById('root')).render(
             </Protected>
           }
         >
+          <Route path="support" element={<Support />} />
           <Route path="cart" element={<Cart />} />
           <Route path="profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
@@ -90,6 +94,16 @@ createRoot(document.getElementById('root')).render(
             <Route path="*" element={<NotFound />} />
           </Route>
           
+          <Route path="*" element={<NotFound />} />
+        </Route>
+
+        <Route path="/deliver" element={
+          <Protected>
+            <User />
+          </Protected>
+        }>
+          <Route path="" element={<DeliverItem />} />
+          <Route path=":id" element={<ItemDeliveryPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

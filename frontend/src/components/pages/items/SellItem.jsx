@@ -119,87 +119,132 @@ const SellItem = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="w-full h-full p-2"
+      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>Sell | TradeHub</title>
       </Helmet>
-      <div className="px-6 w-full h-full">
-        <h2 className="text-3xl font-light text-left">Sell Item</h2>
-        <hr className="my-4 border-t border-gray-300" />
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full md:w-3/4 lg:w-1/2 mx-auto pb-10">
-          <FilePond 
-            files={image}
-            onupdatefiles={setImage}
-            allowMultiple={false}
-            maxFiles={1}
-            name="image"
-            labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
-            imagePreviewHeight={200}
-            imageCropAspectRatio="1:1"
-            imageResizeTargetWidth={400}
-            imageResizeMode="contain"
-          />
-          <label className="font-sans font-normal text-zinc-900">Item Name</label>
-          <input
-            type="text"
-            name="name"
-            value={item.name}
-            onChange={handleInputChange}
-            placeholder="Item Name"
-            className="p-2 border border-gray-300 rounded"
-            required
-          />
-          <label className="font-sans font-normal text-zinc-900">Price</label>
-          <input
-            type="number"
-            name="price"
-            value={item.price}
-            onChange={handleInputChange}
-            placeholder="Price"
-            className="p-2 border border-gray-300 rounded"
-            required
-          />
-          <label className="font-sans font-normal text-zinc-900">Description</label>
-          <textarea
-            name="description"
-            value={item.description}
-            onChange={handleInputChange}
-            placeholder="Description"
-            className="p-2 border border-gray-300 rounded"
-            required
-          />
-          <label className="font-sans font-normal text-zinc-900">Stock</label>
-          <input
-            type="number"
-            name="stock"
-            value={item.stock}
-            onChange={handleInputChange}
-            placeholder="Stock"
-            className="p-2 border border-gray-300 rounded"
-            required
-          />
-          <label className="font-sans font-normal text-zinc-900">Categories</label>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <label key={category} className="flex items-center gap-2 font-sans font-light text-zinc-900">
-                <input
-                  type="checkbox"
-                  value={category}
-                  checked={item.category.includes(category)}
-                  onChange={handleCategoryChange}
-                />
-                {category}
-              </label>
-            ))}
+      
+      <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Sell Item
+            </h1>
           </div>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-zinc-900 text-white rounded-md hover:bg-zinc-800 transition-colors font-sans font-normal"
-          >
-            Submit
-          </button>
-        </form>
+
+          <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+            <form onSubmit={handleSubmit} className="space-y-6 p-6">
+              <div className="space-y-4">
+                <FilePond 
+                  files={image}
+                  onupdatefiles={setImage}
+                  allowMultiple={false}
+                  maxFiles={1}
+                  name="image"
+                  labelIdle='Drag & Drop your image or <span class="filepond--label-action">Browse</span>'
+                  imagePreviewHeight={200}
+                  imageCropAspectRatio="1:1"
+                  imageResizeTargetWidth={400}
+                  imageResizeMode="contain"
+                  className="w-full"
+                />
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Item Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={item.name}
+                    onChange={handleInputChange}
+                    placeholder="Enter item name"
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={item.price}
+                    onChange={handleInputChange}
+                    placeholder="Enter price"
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    value={item.description}
+                    onChange={handleInputChange}
+                    placeholder="Enter description"
+                    rows="4"
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Stock
+                  </label>
+                  <input
+                    type="number"
+                    name="stock"
+                    value={item.stock}
+                    onChange={handleInputChange}
+                    placeholder="Enter stock quantity"
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    Categories
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.map((category) => (
+                      <label 
+                        key={category}
+                        className="inline-flex items-center"
+                      >
+                        <input
+                          type="checkbox"
+                          value={category}
+                          checked={item.category.includes(category)}
+                          onChange={handleCategoryChange}
+                          className="w-4 h-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:checked:bg-zinc-600"
+                        />
+                        <span className="ml-2 text-sm text-zinc-700 dark:text-zinc-300">
+                          {category}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
+              >
+                List Item
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
