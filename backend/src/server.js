@@ -9,6 +9,8 @@ import extractID from './middlewares/extractID.js';
 import authRoutes from './routes/authRoutes.js';
 import itemRoutes from './routes/itemRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import cartRoutes from './routes/cartRoutes.js';
 
 // loading environment variables
 dotenv.config();
@@ -31,6 +33,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/items', extractID, itemRoutes);
 app.use('/api/user', extractID, userRoutes);
+app.use('/api/orders', extractID, orderRoutes);
+app.use('/api/cart', extractID, cartRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

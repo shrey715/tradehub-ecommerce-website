@@ -16,12 +16,16 @@ const OrderSchema = new mongoose.Schema({
     ref: 'Item',
     required: true
   },
+  quantity: {
+    type: Number,
+    required: true
+  },
   amount: {
     type: Number,
     required: true
   },
-  otp: {
-    type: Number,
+  hashed_otp: {
+    type: String,
     required: true
   },
   status: {

@@ -66,6 +66,21 @@ const SellItem = () => {
       return;
     }
 
+    if (item.category.length === 0) {
+      toast.error("Please select at least one category");
+      return;
+    }
+
+    if (item.price <= 0) {
+      toast.error("Price must be greater than 0");
+      return
+    }
+
+    if (item.stock <= 0) {
+      toast.error("Stock must be greater than 0");
+      return
+    }
+
     const formData = new FormData();
     for (const key in item) {
       formData.append(key, item[key]);
@@ -151,6 +166,16 @@ const SellItem = () => {
             value={item.description}
             onChange={handleInputChange}
             placeholder="Description"
+            className="p-2 border border-gray-300 rounded"
+            required
+          />
+          <label className="font-sans font-normal text-zinc-900">Stock</label>
+          <input
+            type="number"
+            name="stock"
+            value={item.stock}
+            onChange={handleInputChange}
+            placeholder="Stock"
             className="p-2 border border-gray-300 rounded"
             required
           />

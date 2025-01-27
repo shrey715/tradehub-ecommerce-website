@@ -86,14 +86,14 @@ const Register = () => {
             type="text"
             name="fname"
             placeholder="First Name"
-            className="w-1/2 p-2 border border-gray-300 rounded"
+            className="p-2 border-b border-zinc-600 w-1/2 active:outline-none focus:outline-none"
             required
           />
           <input
             type="text"
             name="lname"
             placeholder="Last Name"
-            className="w-1/2 p-2 border border-gray-300 rounded"
+            className="p-2 border-b border-zinc-600 w-1/2 active:outline-none focus:outline-none"
             required
           />
         </div>
@@ -101,21 +101,21 @@ const Register = () => {
           type="email"
           name="email"
           placeholder="Email"
-          className="w-full p-2 border border-gray-300 rounded"
+          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
           required
         />
         <input
           type="number"
           name="age"
           placeholder="Age"
-          className="w-full p-2 border border-gray-300 rounded"
+          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
           required
         />
         <input
           type="tel"
           name="contact_no"
           placeholder="Phone Number"
-          className="w-full p-2 border border-gray-300 rounded"
+          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
           required
         />
         <div className="relative w-full">
@@ -123,7 +123,7 @@ const Register = () => {
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
             required
           />
           <button
@@ -161,7 +161,7 @@ const Register = () => {
             type={showPassword ? "text" : "password"}
             name="confirmPassword"
             placeholder="Confirm Password"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
             required
           />
           <button
@@ -262,7 +262,7 @@ const Login = () => {
           name="email"
           type="email"
           placeholder="Email"
-          className="w-full p-2 border border-gray-300 rounded"
+          className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
           required
         />
         <div className="relative w-full">
@@ -270,7 +270,7 @@ const Login = () => {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            className="w-full p-2 border border-gray-300 rounded"
+            className="p-2 border-b border-zinc-600 w-full active:outline-none focus:outline-none"
             required
           />
           <button
@@ -318,7 +318,6 @@ const Login = () => {
 const Logout = () => {
   const { logout } = useUserStore();
   console.log('Logging out');
-  console.log('jwtToken:', localStorage.getItem('jwtToken'));
   useEffect(() => {
     localStorage.removeItem('jwtToken');
     logout();

@@ -37,7 +37,7 @@ const ItemCard = ({ item }) => {
       className='flex flex-col justify-start items-center w-full h-fit p-0 bg-white text-zinc-900 border border-zinc-300 hover:shadow-lg transition-shadow duration-300 cursor-pointer'
       onClick={() => navigate(`/item/${item._id}`)}
     >
-      <img src={`https://picsum.photos/seed/${item._id}/200/300`} alt={item.name} className='w-full h-48 object-cover' />
+      <img src={`https://picsum.photos/seed/${item._id}/200/300`} alt={item.name} className='w-full h-64 object-cover' />
       <div className='flex flex-row justify-between items-center w-full h-fit gap-2 px-4 pt-2'>
         <h2 className='text-lg font-normal break-words'>{item.name}</h2>
         <h3 className='text-lg font-semibold'>&#8377;{item.price}</h3>

@@ -6,13 +6,14 @@ const getItems = async (req, res) => {
   console.log("Fetching items not belonging to the user");
   try {
     const userID = req.userID;
+    console.log("User ID: " + userID);
     if (!userID) {
       console.log("User ID not found");
       return res.status(401).json({ success: false, message: 'Unauthorized: User ID not found' });
     }
 
     const items = await Item.aggregate([
-      { $match: { seller_id: { $ne: userID } } },
+      { $match: { seller_id: { $ne: new mongoose.Types.ObjectId(userID) }, stock: { $gt: 0 } } },
       { $lookup: {
           from: 'users',
           localField: 'seller_id',
@@ -27,10 +28,15 @@ const getItems = async (req, res) => {
           price: 1,
           description: 1,
           category: 1,
+          seller_id: 1,
           seller_name: { $concat: ['$seller.fname', ' ', '$seller.lname'] }
         }
       }
     ]);
+
+    for (let i = 0; i < items.length; i++) {
+      console.log("Item " + i + ": " + items[i].seller_id); 
+    }
 
     console.log("Fetched " + items.length + " items");
     res.status(200).json({ success: true, items });
@@ -68,7 +74,9 @@ const getItemByID = async (req, res) => {
           description: 1,
           category: 1,
           image: 1,
+          stock: 1,
           seller: {
+            id: '$seller._id', 
             name: { $concat: ['$seller.fname', ' ', '$seller.lname'] },
             email: '$seller.email',
             contact_no: '$seller.contact_no'
@@ -76,6 +84,11 @@ const getItemByID = async (req, res) => {
         }
       }
     ]);
+
+    if (!item && item.seller_id === req.userID) {
+      console.log("Unauthorized: Item belongs to user");
+      return res.status(401).json({ success: false, message: 'Unauthorized: Item belongs to user' });
+    }
     
     if (!item.length) {
       console.log("Item not found");
@@ -94,7 +107,7 @@ const getItemByID = async (req, res) => {
 const createItem = async (req, res) => {
   console.log("New item creation request received");
   try {
-    const { name, price, description, category } = req.body;
+    const { name, price, description, stock, category } = req.body;
 
     // validate required fields
     if (!name || typeof name !== 'string') {
@@ -108,6 +121,10 @@ const createItem = async (req, res) => {
     if (!description || typeof description !== 'string') {
       console.log("Invalid or missing description");
       return res.status(400).json({ success: false, message: 'Invalid or missing description' });
+    }
+    if (!stock || isNaN(Number(stock))) {
+      console.log("Invalid or missing stock");
+      return res.status(400).json({ success: false, message: 'Invalid or missing stock' });
     }
     if (!category || typeof category !== 'string') {
       console.log("Invalid or missing category");
@@ -133,6 +150,7 @@ const createItem = async (req, res) => {
       category: categoryArray,
       image: req.file.buffer,        
       seller_id,
+      stock: Number(stock)
     });
 
     const savedItem = await newItem.save();

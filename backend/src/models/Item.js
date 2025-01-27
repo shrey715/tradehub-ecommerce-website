@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Cart from "./Cart.js";
 
 const ItemSchema = new mongoose.Schema({
   name: {
@@ -28,6 +29,22 @@ const ItemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Buffer,
     required: true
   },
+  stock: {
+    type: Number,
+    required: true
+  }
+});
+
+ItemSchema.pre('remove', async function(next) {
+  try {
+    await Cart.updateMany(
+      {},
+      { $pull: { items: { item_id: this._id } } }
+    );
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 const Item = mongoose.model('Item', ItemSchema) || mongoose.models.Item;

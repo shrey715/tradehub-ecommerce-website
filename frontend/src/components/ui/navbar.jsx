@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 import { CiShoppingCart as Cart, CiUser as User, CiShop as Shop, CiMenuBurger as Burger } from "react-icons/ci";
 
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const BurgerMenu = [
   {
-    name: 'My Orders',
-    link: '/order/my',
+    name: 'Orders',
+    link: '/orders/',
   },
   {
     name: 'Sell Item',
@@ -26,6 +26,9 @@ const BurgerMenu = [
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const audioRef = useRef(new Audio('/audio/sigma-boy.mp3'));
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -33,6 +36,42 @@ const Navbar = () => {
 
   const closeDropdown = () => {
     setIsDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        closeDropdown();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  let clickTimeout = null;
+
+  const handleSingleClick = () => {
+    navigate('/item/all');
+  };
+
+  const handleDoubleClick = () => {
+    audioRef.current.play();
+  };
+
+  const handleClick = () => {
+    if (clickTimeout !== null) {
+      clearTimeout(clickTimeout);
+      clickTimeout = null;
+      handleDoubleClick();
+    } else {
+      clickTimeout = setTimeout(() => {
+        handleSingleClick();
+        clickTimeout = null;
+      }, 300);
+    }
   };
 
   return (
@@ -44,8 +83,8 @@ const Navbar = () => {
       className="top-0 left-0 flex flex-row justify-between items-center h-24 w-full bg-white text-zinc-900 font-sans px-5 py-2"
     >
       <div className="flex flex-row items-center">
-        <h1 className="text-4xl font-title font-bold">
-          <Link to="/item/all" className="text-zinc-900">TradeHub</Link>
+        <h1 className="text-4xl font-title font-bold cursor-pointer" onClick={handleClick}>
+          TradeHub
         </h1>
       </div>
       <div className="flex flex-row items-center gap-4 relative">
@@ -58,7 +97,7 @@ const Navbar = () => {
         <Link to="/user/profile"> 
           <User className="h-8 w-8 cursor-pointer" />
         </Link>
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
           <Burger className="h-8 w-8 cursor-pointer" onClick={toggleDropdown} />
           <AnimatePresence>
             {isDropdownOpen && (
