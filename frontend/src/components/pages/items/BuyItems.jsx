@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 
 import useItemStore from '../../../hooks/ItemStore';
-import Item from '../../../../../backend/src/models/Item';
 
 import axios from 'axios';
 import { backendUrl } from '../../../main';
@@ -58,7 +57,16 @@ const ItemCard = ({ item }) => {
 }
 
 ItemCard.propTypes = {
-  item: Item.isRequired,
+  item: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    description: PropTypes.string.isRequired,
+    image: PropTypes.string.isRequired,
+    category: PropTypes.arrayOf(PropTypes.string).isRequired,
+    seller_name: PropTypes.string.isRequired,
+    seller_id: PropTypes.string.isRequired
+  }).isRequired
 };
 
 const FilterSection = ({ setFilteredItems }) => {
