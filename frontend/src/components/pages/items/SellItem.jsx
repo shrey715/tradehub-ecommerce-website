@@ -11,6 +11,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
 import axios from "axios";
 import { backendUrl } from "../../../main";
+import { convertToBase64 } from "../../../lib/convert";
 
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -42,6 +43,7 @@ const SellItem = () => {
     category: [],
   });
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -88,6 +90,11 @@ const SellItem = () => {
     formData.append("image", image[0].file); 
 
     try {
+      setIsLoading(true);
+      const base64Image = await convertToBase64(image[0].file);
+      const category = item.category.join(",");
+      const formData = { ...item, image: base64Image, category };
+
       const token = localStorage.getItem("jwtToken");
       const response = await axios.post(`${backendUrl}/api/items`, formData, {
         headers: {
@@ -111,6 +118,8 @@ const SellItem = () => {
     } catch (error) {
       console.error("Error adding item:", error);
       toast.error("An error occurred");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -119,7 +128,7 @@ const SellItem = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
+      className="h-full bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>Sell | TradeHub</title>
@@ -129,7 +138,7 @@ const SellItem = () => {
         <div className="space-y-6">
           <div className="space-y-2">
             <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Sell Item
+              Create Listing
             </h1>
           </div>
 
@@ -237,10 +246,11 @@ const SellItem = () => {
               </div>
 
               <button
+                disabled={isLoading}
                 type="submit"
-                className="w-full px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
+                className={"w-full px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 disabled:opacity-50 rounded-md transition-colors" + (isLoading ? " cursor-not-allowed" : "")}
               >
-                List Item
+                {isLoading ? "Listing item..." : "List Item"}
               </button>
             </form>
           </div>

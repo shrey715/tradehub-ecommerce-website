@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import './index.css';
 
 import { Toaster } from 'react-hot-toast';
+
 import NotFound from './components/common/NotFound';
 import { AuthLayout, Login, Register, Logout } from './components/pages/auth/Auth';
 import Home from './components/pages/home/Home';
@@ -20,12 +21,15 @@ import SellItem from './components/pages/items/SellItem';
 import BuyItems from './components/pages/items/BuyItems';
 import DeliverItem from './components/pages/items/DeliverItems';
 import ItemDeliveryPage from './components/pages/items/ItemDeliveryPage';
+import MyListing from './components/pages/items/MyListing';
 
 import Order from './components/pages/orders/Order';
 import MyPlaced from './components/pages/orders/MyPlaced';
 import MyCompleted from './components/pages/orders/MyCompleted';
 import SaleCompleted from './components/pages/orders/SaleCompleted';
 import SalePlaced from './components/pages/orders/SalePlaced';
+
+import SellerProfile from './components/pages/seller/SellerProfile';
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -50,6 +54,7 @@ createRoot(document.getElementById('root')).render(
             </Protected>
           }
         >
+          <Route path="my-listings" element={<MyListing />} />
           <Route path="support" element={<Support />} />
           <Route path="cart" element={<Cart />} />
           <Route path="profile" element={<Profile />} />
@@ -97,13 +102,22 @@ createRoot(document.getElementById('root')).render(
           <Route path="*" element={<NotFound />} />
         </Route>
 
-        <Route path="/deliver" element={
+        <Route path="/deliver/*" element={
           <Protected>
             <User />
           </Protected>
         }>
           <Route path="" element={<DeliverItem />} />
           <Route path=":id" element={<ItemDeliveryPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+
+        <Route path="/seller/*" element={
+          <Protected>
+            <User />
+          </Protected>
+        }>
+          <Route path=":id" element={<SellerProfile />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

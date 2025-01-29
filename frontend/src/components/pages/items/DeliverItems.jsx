@@ -44,12 +44,12 @@ const DeliverItems = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
-    >
+      className="w-full h-full bg-[#fafafa] dark:bg-zinc-950"
+      >
       <Helmet>
         <title>Deliver | TradeHub</title>
       </Helmet>
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="max-w-7xl mx-auto p-6 space-y-6 h-full">
         <h2 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
           Orders to Deliver
         </h2>
@@ -64,7 +64,7 @@ const DeliverItems = () => {
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="w-full md:w-1/3">
                     <img
-                      src={`https://picsum.photos/seed/${order.item_id._id}/200/300`}
+                      src={order.item_id.image}
                       alt={order.item_id.name}
                       className="w-full h-60 object-cover rounded-md"
                     />

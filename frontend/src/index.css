@@ -37,18 +37,44 @@
     font-display: swap;
     src: url('/fonts/Rubik/Rubik-VariableFont_wght.ttf') format('truetype');
   }
-}
 
-* {
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-primary) var(--color-secondary);
-  
-  -webkit-scrollbar-width: thin;
-  -webkit-scrollbar-color: var(--color-primary) var(--color-secondary);
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
 
-  -moz-osx-scrollbar-width: thin;
-  -moz-osx-scrollbar-color: var(--color-primary) var(--color-secondary);
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(161 161 170 / 0.3); /* zinc-400/30 - darker */
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(161 161 170 / 0.5); /* zinc-400/50 - darker hover */
+  }
+
+  /* Dark mode */
+  .dark ::-webkit-scrollbar-thumb {
+    background-color: rgb(244 244 245 / 0.2); /* zinc-100/20 - darker */
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(244 244 245 / 0.3); /* zinc-100/30 - darker hover */
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(161 161 170 / 0.3) transparent;
+  }
+
+  .dark * {
+    scrollbar-color: rgb(244 244 245 / 0.2) transparent;
+  }
 }
 
 body {

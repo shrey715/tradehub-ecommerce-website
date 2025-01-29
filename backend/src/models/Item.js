@@ -26,7 +26,7 @@ const ItemSchema = new mongoose.Schema({
     required: true
   },
   image: {
-    type: mongoose.Schema.Types.Buffer,
+    type: String,
     required: true
   },
   stock: {

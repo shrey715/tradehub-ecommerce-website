@@ -46,7 +46,7 @@ const Order = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
+      className="h-full bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>Orders | TradeHub</title>

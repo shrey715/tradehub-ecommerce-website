@@ -68,7 +68,7 @@ const ItemDeliveryPage = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
+      className="h-full bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>Verify Delivery | TradeHub</title>
@@ -111,35 +111,43 @@ const ItemDeliveryPage = () => {
               </div>
             </div>
 
-            <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 space-y-4">
-              <div className="space-y-2">
-                <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
-                  Verify OTP
-                </h3>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                  Enter the OTP provided by the buyer to complete the delivery
+            {order.status === 'completed' ? (
+              <div className="rounded-lg bg-green-50 dark:bg-green-900/30 p-6 text-center">
+                <p className="text-green-700 dark:text-green-400 font-medium">
+                  Order has been completed and verified
                 </p>
               </div>
+            ) : (
+              <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 space-y-4">
+                <div className="space-y-2">
+                  <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
+                    Verify OTP
+                  </h3>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                    Enter the OTP provided by the buyer to complete the delivery
+                  </p>
+                </div>
 
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  placeholder="Enter OTP"
-                  className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
-                />
+                <div className="space-y-4">
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter OTP"
+                    className="w-full px-3 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-500 dark:focus:ring-zinc-400 transition-all"
+                  />
 
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => verifyOrder(otp)}
-                    className="flex-1 px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
-                  >
-                    Verify Order
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => verifyOrder(otp)}
+                      className="flex-1 px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
+                    >
+                      Verify Order
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         ) : (
           <div className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-12 text-center">

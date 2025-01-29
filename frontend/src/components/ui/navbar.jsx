@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-
 import { CiShoppingCart as Cart, CiUser as User, CiShop as Shop, CiMenuBurger as Burger, CiCircleQuestion as Support } from "react-icons/ci";
-
 import { Link, useNavigate } from 'react-router';
-
 import Sigma from './sigma';
+import PropTypes from 'prop-types';
+import * as Tooltip from '@radix-ui/react-tooltip';
 
 const BurgerMenu = [
   {
@@ -13,7 +12,11 @@ const BurgerMenu = [
     link: '/orders/',
   },
   {
-    name: 'Sell Item',
+    name: 'My Listings',
+    link: '/user/my-listings',
+  },
+  {
+    name: 'Create Listing',
     link: '/item/sell',
   },
   {
@@ -25,6 +28,36 @@ const BurgerMenu = [
     link: '/auth/logout',
   },
 ];
+
+const NavLink = ({ to, title, children }) => (
+  <Tooltip.Provider>
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>
+        <Link 
+          to={to}
+          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        >
+          {children}
+        </Link>
+      </Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Content
+          className="bg-zinc-800 text-white px-2 py-1 rounded text-sm"
+          sideOffset={5}
+        >
+          {title}
+          <Tooltip.Arrow className="fill-zinc-800" />
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  </Tooltip.Provider>
+);
+
+NavLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -83,13 +116,19 @@ const Navbar = () => {
     }
   };
 
+  // const iconVariants = {
+  //   initial: { opacity: 0, rotate: -180 },
+  //   animate: { opacity: 1, rotate: 0 },
+  //   exit: { opacity: 0, rotate: 180 }
+  // };
+
   return (
     <motion.nav
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ type: 'spring', stiffness: 100 }}
       exit={{ opacity: 0 }}
-      className="sticky top-0 left-0 flex flex-row justify-between items-center h-16 w-full bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-4 lg:px-6 z-50"
+      className="sticky top-0 left-0 flex flex-row justify-between items-center min-h-16 h-16 w-full bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-4 lg:px-6 z-50"
     >
       <div className="flex items-center">
         <h1 
@@ -101,30 +140,21 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">
-        <Link 
-          to="/item/all"
-          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-        >
+        <NavLink to="/item/all" title="Shop">
           <Shop className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
-        </Link>
-        <Link 
-          to="/user/cart"
-          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-        >
+        </NavLink>
+        
+        <NavLink to="/user/cart" title="My Cart">
           <Cart className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
-        </Link>
-        <Link 
-          to="/user/profile"
-          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-        >
+        </NavLink>
+        
+        <NavLink to="/user/profile" title="My Profile">
           <User className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
-        </Link>
-        <Link
-          to="/user/support/"
-          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-        >
+        </NavLink>
+        
+        <NavLink to="/user/support" title="Chat Support">
           <Support className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
-        </Link>
+        </NavLink>
         
         <div className="relative" ref={dropdownRef}>
           <button
@@ -141,7 +171,7 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
-                className="absolute top-full right-0 mt-2 w-48 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-lg"
+                className="absolute top-full right-0 mt-4 w-48 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-lg"
               >
                 <ul className="py-1">
                   {BurgerMenu.map((item, index) => (
@@ -160,6 +190,37 @@ const Navbar = () => {
             )}
           </AnimatePresence>
         </div>
+
+        {/* <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors relative"
+        >
+          <AnimatePresence mode="wait">
+            {theme === 'dark' ? (
+              <motion.div
+                key="sun"
+                variants={iconVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+              >
+                <Sun className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="moon"
+                variants={iconVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+              >
+                <Moon className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </button> */}
       </div>
 
       {isPlaying && <Sigma />}

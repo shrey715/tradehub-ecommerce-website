@@ -25,7 +25,7 @@ const Home = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            No More WhatsApp Tax on Buy-Sell Groups
+            No More WhatsCap Tax on Buy-Sell Groups
           </motion.h1>
           <motion.p 
             className="text-xl md:text-2xl text-zinc-400 max-w-3xl"
@@ -33,7 +33,7 @@ const Home = () => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            Say goodbye to the 10% transaction tax on WhatsApp Buy-Sell groups.
+            Say goodbye to the 10% transaction tax on WhatsCap Buy-Sell groups.
             Welcome to your dedicated IIIT marketplace.
           </motion.p>
         </div>

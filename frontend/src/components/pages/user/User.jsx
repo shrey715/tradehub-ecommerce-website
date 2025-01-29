@@ -40,9 +40,11 @@ const User = () => {
   }
 
   return (
-    <main className='flex flex-col justify-start w-full h-full'>      
+    <main className='flex flex-col justify-start w-full h-screen'>      
       <Navbar />
-      <Outlet />
+      <div className="w-full h-full flex-1">
+        <Outlet />
+      </div>
     </main>
   );
 };

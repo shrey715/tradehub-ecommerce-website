@@ -1,5 +1,7 @@
+import Order from "../models/Order.js";
 import User from "../models/User.js";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 // route for fetching current user
 const getCurrentUser = async (req, res) => {
@@ -64,7 +66,37 @@ const updateCurrentUser = async (req, res) => {
   }
 }
 
-// to get seller name, email and contact number on item pages, by item id
+const updatePassword = async (req, res) => {
+  console.log('Request to update user password');
+  try {
+    const userID = req.userID;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!userID || !mongoose.Types.ObjectId.isValid(userID)) {
+      return res.status(400).json({ success: false, message: 'Invalid user ID' });
+    }
+
+    const user = await User.findById(userID);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: 'Invalid password' });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+}
+
+// route to get seller name, email and contact number on item pages, by item id
 const getSellerDetails = async (req, res) => {
   console.log('Request to get seller details');
   try {
@@ -73,17 +105,39 @@ const getSellerDetails = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Invalid seller ID' });
     }
 
-    console.log('Fetching seller details for seller ID ' + id);
-    const seller = await User.findById(id).select('fname lname email contact_no');
+    const [seller, orders] = await Promise.all([
+      User.findById(id).select('fname lname email contact_no'),
+      Order.find({ 
+        seller_id: id, 
+        status: 'completed' 
+      })
+      .populate('item_id', 'name price image')
+      .populate('buyer_id', 'fname lname')
+      .sort({ date: -1 })
+      .limit(10)
+    ]);
+
     if (!seller) {
       return res.status(404).json({ success: false, message: 'Seller not found' });
     }
 
-    res.status(200).json({ success: true, seller });
+    const totalSales = orders.reduce((sum, order) => sum + order.amount, 0);
+    const completedOrders = orders.length;
+
+    res.status(200).json({ 
+      success: true, 
+      seller,
+      stats: {
+        totalSales,
+        completedOrders
+      },
+      recentOrders: orders
+    });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
-}
+};
 
-export { getCurrentUser, updateCurrentUser, getUserID, getSellerDetails };
+export { getCurrentUser, updateCurrentUser, getUserID, getSellerDetails, updatePassword };

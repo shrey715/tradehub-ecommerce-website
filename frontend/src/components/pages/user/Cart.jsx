@@ -121,7 +121,7 @@ const Cart = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
+      className="h-full bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>My Cart | TradeHub</title>
@@ -138,7 +138,7 @@ const Cart = () => {
                 <div className="flex flex-col md:flex-row p-4 gap-6">
                   <div className="w-full md:w-1/3">
                     <img
-                      src={`https://picsum.photos/seed/${item._id}/200/300`}
+                      src={item.image}
                       alt={item.name}
                       className="w-full h-48 object-cover rounded-md"
                     />

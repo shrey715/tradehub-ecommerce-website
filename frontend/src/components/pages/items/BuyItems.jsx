@@ -39,7 +39,7 @@ const ItemCard = ({ item }) => {
     >
       <div className="aspect-square overflow-hidden">
         <img 
-          src={`https://picsum.photos/seed/${item._id}/400`} 
+          src={item.image} 
           alt={item.name} 
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
         />
@@ -174,7 +174,7 @@ const BuyItems = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
+      className="h-full bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>Buy Items | TradeHub</title>

@@ -17,7 +17,7 @@ const SalePlaced = () => {
       className="w-full h-full p-2"
     >
       <Helmet>
-        <title>My Placed Orders | TradeHub</title>
+        <title>Customer Placed Orders | TradeHub</title>
       </Helmet>
       <div className="w-full h-full p-4">
         <h2 className="text-2xl font-light text-left mb-4">My Placed Orders</h2>

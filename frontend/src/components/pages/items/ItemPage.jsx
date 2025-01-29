@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { backendUrl } from '../../../main';
 import { useParams } from 'react-router';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { CgSpinnerTwoAlt as LoadingIcon } from 'react-icons/cg';
 
 import { Helmet } from 'react-helmet';
@@ -11,13 +11,17 @@ import { motion } from 'motion/react';
 import toast from 'react-hot-toast';
 import Loading from '../../common/loading';
 
+import useUserStore from '../../../hooks/UserStore';
+
 const ItemPage = () => {
   const { id } = useParams(); 
   const [item, setItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
+  const { user } = useUserStore();
   const navigate = useNavigate();
+  const [ userIsSeller, setUserIsSeller ] = useState(false);
 
   useEffect(() => {
     const checkCartStatus = async () => {
@@ -117,6 +121,10 @@ const ItemPage = () => {
 
           if(res.data.success) {
             setItem(res.data.item);
+
+            if (user && user._id === res.data.item.seller.id) {
+              setUserIsSeller(true);
+            }
           } else {
             toast.error('Error: ' + res.data.message);
           }
@@ -130,7 +138,7 @@ const ItemPage = () => {
     };
 
     fetchItem();
-  }, [id]);
+  }, [id, user]);
 
   if (!item || !item.seller) {
     return <Loading />;
@@ -141,7 +149,7 @@ const ItemPage = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="min-h-screen bg-[#fafafa] dark:bg-zinc-950"
+      className="h-full bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>{item?.name || 'Loading...'} | TradeHub</title>
@@ -155,7 +163,7 @@ const ItemPage = () => {
             <div className="w-full lg:w-1/2">
               <div className="sticky top-6">
                 <img 
-                  src={`https://picsum.photos/seed/${item._id}/720`} 
+                  src={item.image} 
                   alt={item.name}
                   className="w-full aspect-square object-cover rounded-lg shadow-sm"
                 />
@@ -194,15 +202,38 @@ const ItemPage = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-zinc-500 dark:text-zinc-400">Name</span>
-                    <p className="font-medium text-zinc-900 dark:text-zinc-50">{item.seller.name}</p>
+                    <Link 
+                      to={`/seller/${item.seller.id}`}
+                      className="font-medium text-zinc-900 dark:text-zinc-50 hover:text-green-600 
+                                dark:hover:text-green-400 transition-colors cursor-pointer
+                                hover:underline flex items-center gap-1"
+                    >
+                      {item.seller.name}
+                    </Link>
                   </div>
                   <div>
                     <span className="text-zinc-500 dark:text-zinc-400">Contact</span>
-                    <p className="font-medium text-zinc-900 dark:text-zinc-50">{item.seller.contact_no}</p>
+                    <a 
+                      href={`tel:${item.seller.contact_no}`}
+                      className="font-medium text-zinc-900 dark:text-zinc-50 hover:text-green-600 
+                                dark:hover:text-green-400 transition-colors cursor-pointer
+                                hover:underline flex items-center gap-1"
+                      title="Click to call"
+                    >
+                      {item.seller.contact_no}
+                    </a>
                   </div>
                   <div className="col-span-2">
                     <span className="text-zinc-500 dark:text-zinc-400">Email</span>
-                    <p className="font-medium text-zinc-900 dark:text-zinc-50">{item.seller.email}</p>
+                    <a
+                      href={`mailto:${item.seller.email}`}
+                      className="font-medium text-zinc-900 dark:text-zinc-50 hover:text-green-600 
+                                dark:hover:text-green-400 transition-colors cursor-pointer
+                                hover:underline flex items-center gap-1"
+                      title="Click to email"
+                    >
+                      {item.seller.email}
+                    </a>
                   </div>
                 </div>
               </div>
@@ -228,6 +259,14 @@ const ItemPage = () => {
                     Currently Unavailable
                   </p>
                 </div>
+              ) : userIsSeller ? (
+                <button
+                  disabled
+                  className="w-full px-4 py-2 rounded-md bg-zinc-100 text-zinc-500 
+                            dark:bg-zinc-800 dark:text-zinc-400 cursor-not-allowed"
+                >
+                  You can&apos;t buy your own item
+                </button>
               ) : (
                 <div className="flex gap-4">
                   <button

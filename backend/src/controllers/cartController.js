@@ -103,6 +103,7 @@ const getCart = async (req, res) => {
         _id: item.item_id,
         name: itemDetails.name,
         price: itemDetails.price,
+        image: itemDetails.image,
         quantity: item.quantity,
         seller_id: itemDetails.seller_id,
         seller_name: `${sellerDetails.fname} ${sellerDetails.lname}`,
