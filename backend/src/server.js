@@ -6,6 +6,7 @@ import connectDB from './config/db.js';
 import connectCloudinary from './config/cloudinary.js';
 
 import extractID from './middlewares/extractID.js';
+import { handleMulterError } from './middlewares/uploadMiddleware.js';
 
 import authRoutes from './routes/authRoutes.js';
 import itemRoutes from './routes/itemRoutes.js';
@@ -31,6 +32,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 }));
 app.use(express.json());
+app.use(handleMulterError);
 
 // API routes
 app.use('/api/auth', authRoutes);

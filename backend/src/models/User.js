@@ -14,23 +14,26 @@ const UserSchema = new mongoose.Schema({
   },
   age: {
     type: Number,
-    required: true
+    required: true,
+    default: 18
   },
   email: {
     type: String,
     required: true,
     trim: true,
-    unique: true
+    unique: true,
+    lowercase: true,
   },
   contact_no: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+    default: '0000000000'
   },
   password: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   }
 });
 

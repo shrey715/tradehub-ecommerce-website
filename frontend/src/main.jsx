@@ -6,7 +6,7 @@ import './index.css';
 
 import { Toaster } from 'react-hot-toast';
 
-import NotFound from './components/common/NotFound';
+import NotFound from './components/pages/common/NotFound';
 import { AuthLayout, Login, Register, Logout } from './components/pages/auth/Auth';
 import Home from './components/pages/home/Home';
 

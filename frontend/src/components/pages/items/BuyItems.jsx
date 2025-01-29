@@ -12,7 +12,7 @@ import { backendUrl } from '../../../main';
 import toast from 'react-hot-toast';
 
 import { CiSearch } from 'react-icons/ci';
-import Loading from '../../common/loading';
+import Loading from '../common/Loading';
 
 const categories = [
   'Clothing',

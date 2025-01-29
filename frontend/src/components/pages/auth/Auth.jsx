@@ -9,7 +9,7 @@ import { Outlet } from "react-router";
 import { Link, useNavigate } from "react-router";
 
 import { FaRegCheckCircle, FaArrowCircleLeft } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 import axios from "axios";
 import { backendUrl } from "../../../main";
@@ -71,7 +71,7 @@ const Register = () => {
 
   return (
     <motion.div 
-      className="flex flex-col justify-center items-center w-full h-full p-8 space-y-6"
+      className="flex flex-col justify-center items-center w-full space-y-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -79,10 +79,10 @@ const Register = () => {
       <Helmet>
         <title>Register | TradeHub</title>
       </Helmet>
-      <div className="flex items-center justify-between w-full">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
-          <Link to="/" className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors">
-            <FaArrowCircleLeft size={24} />
+      <div className="flex items-center justify-between w-full mb-2">
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
+          <Link to="/" className="hover:opacity-80 transition-opacity">
+            <FaArrowCircleLeft className="w-5 h-5" />
           </Link>
           Register
         </h1>
@@ -165,16 +165,16 @@ const Register = () => {
         </div>
         <button
           type="submit"
-          className="w-full px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
+          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-all"
         >
           Register
         </button>
       </form>
       <Link 
         to="/auth/login" 
-        className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
+        className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
       >
-        Already have an account? Login
+        Already have an account? <span className="underline">Login</span>
       </Link>
     </motion.div>
   );
@@ -205,7 +205,7 @@ const Login = () => {
           toast.success("Login successful");
           const token = res.data.token;
           localStorage.setItem('jwtToken', token);
-          navigate('/item/all');
+          navigate('/user/profile');
         } else {
           toast.error("Invalid email or password");
         }
@@ -217,7 +217,7 @@ const Login = () => {
 
   return (
     <motion.div 
-      className="flex flex-col justify-center items-center w-full h-full p-8 space-y-6"
+      className="flex flex-col justify-center items-center w-full space-y-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -225,10 +225,10 @@ const Login = () => {
       <Helmet>
         <title>Login | TradeHub</title>
       </Helmet>
-      <div className="flex items-center justify-between w-full">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
-          <Link to="/" className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors">
-            <FaArrowCircleLeft size={24} />
+      <div className="flex items-center justify-between w-full mb-2">
+        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-3">
+          <Link to="/" className="hover:opacity-80 transition-opacity">
+            <FaArrowCircleLeft className="w-5 h-5" />
           </Link>
           Login
         </h1>
@@ -261,16 +261,16 @@ const Login = () => {
         </div>
         <button
           type="submit"
-          className="w-full px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
+          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-zinc-500 focus:ring-offset-2 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-all"
         >
           Login
         </button>
       </form>
       <Link 
         to="/auth/register" 
-        className="text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
+        className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 transition-colors"
       >
-        Don&apos;t have an account? Register
+        Don&apos;t have an account? <span className="underline">Register</span>
       </Link>
     </motion.div>
   );
@@ -287,7 +287,7 @@ const Logout = () => {
 
   return (
     <motion.div 
-      className="flex flex-col justify-center items-center text-center w-full h-full p-8"
+      className="flex flex-col justify-center items-center text-center w-full space-y-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -295,7 +295,9 @@ const Logout = () => {
       <Helmet>
         <title>Logout | TradeHub</title>
       </Helmet>
-      <h1 className="text-4xl font-bold mb-5">Logout <FaRegCheckCircle className="inline-block text-green-500" /></h1>
+      <h1 className="text-3xl font-semibold tracking-tight flex items-center gap-2">
+        Logout <FaRegCheckCircle className="text-green-500" />
+      </h1>      
       <p className="text-lg text-zinc-800">You have been successfully logged out.</p>
       <p className="text-lg text-zinc-800">
         To go to home page, click <Link to="/" className="text-blue-700 hover:underline">here</Link>. Or to login again, click <Link to="/auth/login" className="text-blue-700 hover:underline">here</Link>. 
@@ -335,14 +337,14 @@ const AuthLayout = () => {
 
   return (
     <motion.main 
-      className="auth-background h-screen relative"
+      className="min-h-screen auth-background bg-cover bg-center relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     > 
-      <div className="absolute inset-0 bg-black/50"></div>
-      <div className="flex justify-center items-center p-8 h-full relative">
-        <div className="bg-white dark:bg-zinc-900 p-2 rounded-lg shadow-lg w-full sm:w-3/4 md:w-2/3 lg:w-1/3">
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-none"></div>
+      <div className="flex justify-center items-center p-4 sm:p-8 min-h-screen relative">
+        <div className="bg-white/95 dark:bg-zinc-900/95 p-6 rounded-xl shadow-2xl w-full max-w-md backdrop-blur-sm border border-zinc-200/20 dark:border-zinc-700/20">
           <Outlet />
         </div>
       </div>

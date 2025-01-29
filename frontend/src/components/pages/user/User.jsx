@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import useUserStore from '../../../hooks/UserStore';
 
-import Loading from '../../common/loading';
+import Loading from '../common/Loading';
 import Navbar from '../../ui/navbar';
 
 import toast from 'react-hot-toast';

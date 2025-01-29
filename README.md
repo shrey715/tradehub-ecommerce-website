@@ -16,7 +16,7 @@ at IIIT Hyderabad. The platform is built using MERN stack.
     - Motion: Animation library for React.
     - Tailwind CSS: A utility-first CSS framework for rapidly building custom designs.
     - React-Helmet: A document head manager for React.
-    - Google-generative-ai: A library for generating images using Google's generative AI models, `Gemini 1.5 Flash` in this case.
+    - Google-generative-ai: A library for powering the chatbot using Google's generative AI models, `Gemini 1.5 Flash` in this case.
 
 - Backend:
     - Express: Fast, unopinionated, minimalist web framework for Node.js.

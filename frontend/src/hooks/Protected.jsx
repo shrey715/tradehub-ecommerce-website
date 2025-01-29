@@ -5,7 +5,7 @@ import axios from 'axios';
 import { backendUrl } from '../main';
 import PropTypes from 'prop-types';
 
-import Loading from '../components/common/loading';
+import Loading from '../components/pages/common/Loading';
 
 const Protected = ({ children }) => {
   const navigate = useNavigate();

@@ -26,8 +26,12 @@ export default {
   				'sans-serif'
   			]
   		},
+		scrollbar: ['rounded']
   	}
   },
-  plugins: [import("tailwindcss-animate")],
+  plugins: [
+	import("tailwindcss-animate"),     
+	import('tailwind-scrollbar')
+  ],
 }
 

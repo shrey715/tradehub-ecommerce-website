@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import Markdown from 'react-markdown';
 import { useEffect, useState, useRef } from 'react';
 import { CiPaperplane } from "react-icons/ci";
-import Loading from '../../common/loading';
+import Loading from '../common/Loading';
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ 
@@ -40,6 +40,23 @@ will take you to your cart where you can view all the items that you have added 
 The Dropdown menu on the top right corner of the screen will allow you to view all orders that you have placed or that you have to deliver if you are a seller.
 You can see the "Deliver Items" tab to view all the items that you have to deliver. You can press "Sell Items" to list your items for sale. Occasionally anyone asks 
 about Home, ask them to double-click the TradeHub logo to touch true home (its an easter egg so mind that).`;
+
+const TypingIndicator = () => (
+  <div className="flex justify-start items-end gap-2">
+    <img 
+      src="/images/frog.png" 
+      alt="Nagu" 
+      className="w-6 h-6 rounded-full flex-shrink-0"
+    />
+    <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg">
+      <div className="flex space-x-2">
+        <div className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" />
+        <div className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+        <div className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+      </div>
+    </div>
+  </div>
+);
 
 const initChat = async () => {
   const session = model.startChat({
@@ -127,14 +144,14 @@ const Support = () => {
       initial={{ x: '-100vw' }}
       animate={{ x: 0 }}
       exit={{ x: '100vw' }}
-      className="h-full flex justify-center items-center bg-[#fafafa] dark:bg-zinc-950"
+      className="h-full relative inset-0 flex justify-end items-center bg-[#fafafa] dark:bg-zinc-950"
     >
       <Helmet>
         <title>Chat with Nagu | TradeHub</title>
       </Helmet>
   
-      <div className="h-full max-w-4xl mx-auto px-4 py-6 flex flex-col">
-        <div className="bg-zinc-100 p-4 rounded-t-lg border-2 border-b-0 border-zinc-100">
+      <div className="h-[85vh] w-full max-w-4xl m-auto px-4 flex flex-col">
+        <div className="bg-zinc-200 p-4 rounded-t-lg border-2 border-b-0 border-zinc-100">
           <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Chat Support
           </h1>
@@ -143,8 +160,11 @@ const Support = () => {
           </p>
         </div>
   
-        <div className="flex-1 bg-white dark:bg-zinc-800 overflow-y-auto h-full border-2 border-t-0 border-b-0 border-zinc-100">
-          <div ref={chatRef} className="p-4 space-y-4 h-full">
+        <div className="flex-1 bg-white dark:bg-zinc-800 border-2 border-t-0 border-b-0 border-zinc-100 relative">
+          <div 
+            ref={chatRef} 
+            className="absolute inset-0 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-700 p-4 space-y-4"
+          >            
             {messages.map((msg, idx) => (
               <div 
                 key={idx} 
@@ -170,16 +190,11 @@ const Support = () => {
                 </div>
               </div>
             ))}
+            {loading && <TypingIndicator />}
           </div>
-
-          {loading && (
-            <div className="flex justify-center items-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-            </div>
-          )}
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 flex items-center space-x-2 rounded-b-lg border-2 border-t-0 border-zinc-100 bg-zinc-100">
+        <form onSubmit={handleSubmit} className="p-4 flex items-center space-x-2 rounded-b-lg border-2 border-t-0 border-zinc-100 bg-zinc-200">
           <input
             type="text"
             value={input}

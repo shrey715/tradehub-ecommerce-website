@@ -9,7 +9,7 @@ import { Link, useNavigate } from 'react-router';
 import { CiEdit, CiTrash } from 'react-icons/ci';
 
 import toast from 'react-hot-toast';
-import Loading from '../../common/loading';
+import Loading from '../common/Loading';
 import EditListingModal from '../../ui/EditListingModal';
 
 const MyListing = () => {

@@ -17,7 +17,7 @@ const SaleCompleted = () => {
         <title>Customer Completed Orders | TradeHub</title>
       </Helmet>
       <div className="w-full h-full p-4">
-        <h2 className="text-2xl font-light text-left mb-4">My Placed Orders</h2>
+        <h2 className="text-2xl font-light text-left mb-4">Customer Completed Orders</h2>
         <table className="w-full border-collapse">
           <thead>
             <tr>

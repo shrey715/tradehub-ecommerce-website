@@ -8,7 +8,7 @@ import axios from "axios";
 import { backendUrl } from "../../../main";
 
 import toast from "react-hot-toast";
-import Loading from "../../common/loading";
+import Loading from "../common/Loading";
 
 const ItemDeliveryPage = () => {
   const { id } = useParams();
@@ -16,6 +16,7 @@ const ItemDeliveryPage = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState('');
+  const [isConfirmMode, setIsConfirmMode] = useState(false);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -61,6 +62,15 @@ const ItemDeliveryPage = () => {
       console.error("Error verifying order:", error);
       toast.error("Error verifying order");
     }
+  };
+
+  const handleButtonClick = () => {
+    if (!isConfirmMode) {
+      setIsConfirmMode(true);
+      return;
+    }
+    verifyOrder(otp);
+    setIsConfirmMode(false);
   };
   
   return (
@@ -139,10 +149,10 @@ const ItemDeliveryPage = () => {
 
                   <div className="flex gap-3">
                     <button
-                      onClick={() => verifyOrder(otp)}
+                      onClick={handleButtonClick}
                       className="flex-1 px-4 py-2 text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-md transition-colors"
                     >
-                      Verify Order
+                      {isConfirmMode ? "Confirm Transaction" : "Verify OTP"}
                     </button>
                   </div>
                 </div>

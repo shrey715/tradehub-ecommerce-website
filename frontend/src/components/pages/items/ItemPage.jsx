@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 
 import toast from 'react-hot-toast';
-import Loading from '../../common/loading';
+import Loading from '../common/Loading';
 
 import useUserStore from '../../../hooks/UserStore';
 
@@ -165,7 +165,7 @@ const ItemPage = () => {
                 <img 
                   src={item.image} 
                   alt={item.name}
-                  className="w-full aspect-square object-cover rounded-lg shadow-sm"
+                  className="w-full aspect-square object-contain rounded-lg shadow-sm"
                 />
               </div>
             </div>

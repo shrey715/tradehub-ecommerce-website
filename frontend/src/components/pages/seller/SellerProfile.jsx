@@ -9,7 +9,7 @@ import { FaStar } from "react-icons/fa";
 import { backendUrl } from "../../../main";
 
 import toast from "react-hot-toast";
-import Loading from "../../common/loading";
+import Loading from "../common/Loading";
 
 const SellerProfile = () => {
   const { id } = useParams();
