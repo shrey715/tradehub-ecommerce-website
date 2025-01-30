@@ -25,34 +25,31 @@ const app = express();
 connectDB();
 connectCloudinary();
 
-// Add before API routes
-app.get('/debug', (req, res) => {
-    console.log('CORS_ORIGIN:', process.env.CORS_ORIGIN);
-    console.log('Request Origin:', req.headers.origin);
-    res.json({
-        cors_origin: process.env.CORS_ORIGIN,
-        request_origin: req.headers.origin,
-        env_vars: {
-            NODE_ENV: process.env.NODE_ENV,
-            PORT: process.env.PORT
-        }
-    });
-});
-
-// Add CORS debugging middleware
-app.use((req, res, next) => {
-    console.log(`Request from origin: ${req.headers.origin}`);
-    next();
-});
-
 // middlewares
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || "*",
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
 }));
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || "*");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).json({ error: 'Invalid token' });
+    } else {
+        res.status(500).json({ error: err.message });
+    }
+});
 app.use(express.json());
 app.use(handleMulterError);
+
+app.options('*', cors());
 
 // API routes
 app.use('/api/auth', authRoutes);
