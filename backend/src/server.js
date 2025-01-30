@@ -31,25 +31,9 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    preflightContinue: false,
-    optionsSuccessStatus: 204
 }));
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || "*");
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
-    if (err.name === 'UnauthorizedError') {
-        res.status(401).json({ error: 'Invalid token' });
-    } else {
-        res.status(500).json({ error: err.message });
-    }
-});
 app.use(express.json());
 app.use(handleMulterError);
-
-app.options('*', cors());
 
 // API routes
 app.use('/api/auth', authRoutes);
