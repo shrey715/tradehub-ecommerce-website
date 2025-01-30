@@ -33,6 +33,8 @@ const Register = () => {
       data[key] = value;
     }
 
+    console.log(data);
+
     if (data.contact_no.length !== 10) {
       toast.error("Phone number must be 10 digits long");
       return;
@@ -54,24 +56,17 @@ const Register = () => {
       return;
     }
 
-    console.log("Sending req to backend at:", `${backendUrl}/api/auth/register`);
-    await axios.post(`${backendUrl}/api/auth/register`, data, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      withCredentials: true
-    })
-    .then(res => {
-      if(res.data.success) {
-        toast.success("Registration successful");
-        navigate('/auth/login');
-      }
-    })
-    .catch(err => {
-      const message = err.response?.data?.message || "Registration failed";
-      toast.error(message);
-      console.error("Registration error:", err);
-    });
+    await axios.post(`${backendUrl}/api/auth/register`, data)
+      .then(res => {
+        if(res.data.success) {
+          toast.success("Registration successful");
+          navigate('/auth/login');
+        }
+      })
+      .catch(err => {
+        toast.error("Something went wrong");
+        console.error(err);
+      });
   }
 
   return (
