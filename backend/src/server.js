@@ -31,9 +31,22 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
 }));
+app.use('*', cors());
 app.use(express.json());
 app.use(handleMulterError);
+
+app.use((err, req, res, next) => {
+    if (err.name === 'CORSError') {
+        res.status(403).json({
+        success: false,
+        message: 'CORS error: ' + err.message
+        });
+    } else {
+        next(err);
+    }
+});
 
 // API routes
 app.use('/api/auth', authRoutes);
