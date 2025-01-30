@@ -55,17 +55,23 @@ const Register = () => {
     }
 
     console.log("Sending req to backend at:", `${backendUrl}/api/auth/register`);
-    await axios.post(`${backendUrl}/api/auth/register`, data)
-      .then(res => {
-        if(res.data.success) {
-          toast.success("Registration successful");
-          navigate('/auth/login');
-        }
-      })
-      .catch(err => {
-        toast.error("Something went wrong");
-        console.error(err);
-      });
+    await axios.post(`${backendUrl}/api/auth/register`, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
+    })
+    .then(res => {
+      if(res.data.success) {
+        toast.success("Registration successful");
+        navigate('/auth/login');
+      }
+    })
+    .catch(err => {
+      const message = err.response?.data?.message || "Registration failed";
+      toast.error(message);
+      console.error("Registration error:", err);
+    });
   }
 
   return (
