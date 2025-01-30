@@ -4,6 +4,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
+    "build": "mkdir -p dist && cp -r src/* dist/",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
