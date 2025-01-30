@@ -118,4 +118,25 @@ const getCart = async (req, res) => {
   }
 };
 
-export { addToCart, removeFromCart, clearCart, getCart };
+//route to return number of cart items
+const getCartCount = async (req, res) => {
+  console.log('Getting cart count');
+  try {
+    const userID = req.userID;
+
+    const cart = await Cart.findOne({ user_id: userID });
+
+    if (!cart || cart.items.length === 0) {
+      res.status(200).json({ success: true, count: 0 });
+      return;
+    }
+
+    const count = cart.items.reduce((acc, item) => acc + item.quantity, 0);
+    res.status(200).json({ success: true, count });
+  } catch (error) {
+    console.error('Error getting cart count:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
+export { addToCart, removeFromCart, clearCart, getCart, getCartCount };

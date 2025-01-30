@@ -4,6 +4,7 @@ import { CiTrash } from "react-icons/ci";
 import toast from "react-hot-toast";
 
 import { useEffect, useState } from "react";
+import useCartNumberStore from "../../../hooks/CartNumberStore";
 
 import axios from "axios";
 import { backendUrl } from "../../../main";
@@ -11,6 +12,7 @@ import { backendUrl } from "../../../main";
 const Cart = () => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
+  const { setCartNumber } = useCartNumberStore();
 
   useEffect(() => {
     const getCart = async () => {
@@ -52,6 +54,7 @@ const Cart = () => {
       );
 
       if (res.data.success) {
+        setCartNumber((prev) => prev - 1);
         setCart(cart.filter((item) => item._id !== itemID));
         toast.success("Item removed from cart");
       } else {
@@ -77,6 +80,7 @@ const Cart = () => {
       });
 
       if (res.data.success) {
+        setCartNumber(0);
         setCart([]);
         toast.success("Cart cleared");
       } else {

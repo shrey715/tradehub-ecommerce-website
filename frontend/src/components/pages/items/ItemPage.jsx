@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import Loading from '../common/Loading';
 
 import useUserStore from '../../../hooks/UserStore';
+import useCartNumberStore from '../../../hooks/CartNumberStore';
 
 const ItemPage = () => {
   const { id } = useParams(); 
@@ -22,6 +23,7 @@ const ItemPage = () => {
   const { user } = useUserStore();
   const navigate = useNavigate();
   const [ userIsSeller, setUserIsSeller ] = useState(false);
+  const { setCartNumber } = useCartNumberStore();
 
   useEffect(() => {
     const checkCartStatus = async () => {
@@ -59,6 +61,7 @@ const ItemPage = () => {
       });
 
       if (res.data.success) {
+        setCartNumber((prev) => prev + 1);
         setIsInCart(true);
         toast.success('Item added to cart');
       } else {

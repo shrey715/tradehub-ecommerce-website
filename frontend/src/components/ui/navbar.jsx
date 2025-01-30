@@ -5,6 +5,9 @@ import { Link, useNavigate } from 'react-router';
 import Sigma from './sigma';
 import PropTypes from 'prop-types';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import useCartNumberStore from '../../hooks/CartNumberStore';
+import axios from 'axios';
+import { backendUrl } from '../../main';
 
 const BurgerMenu = [
   {
@@ -29,24 +32,52 @@ const BurgerMenu = [
   },
 ];
 
-const NavLink = ({ to, title, children }) => (
-  <Tooltip.Provider>
+const NavLink = ({ to, title, children, notificationCount }) => (
+  <Tooltip.Provider delayDuration={100}>
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
         <Link 
           to={to}
-          className="p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          className="relative inline-flex items-center justify-center h-10 w-10 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-200"
         >
-          {children}
+          <span className="inline-flex items-center justify-center">
+            {children}
+          </span>
+          <AnimatePresence>
+            {notificationCount > 0 && (
+              <motion.span
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 25,
+                  mass: 1
+                }}
+                className="absolute -top-1.5 -right-1 min-w-[20px] h-5 px-1.5 flex items-center justify-center rounded-full bg-zinc-800 text-[11px] font-medium text-white ring-2 ring-white dark:ring-zinc-900"
+              >
+                <motion.span
+                  key={notificationCount}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.5, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 100 }}
+                >
+                  {notificationCount > 99 ? '99+' : notificationCount}
+                </motion.span>
+              </motion.span>
+            )}
+          </AnimatePresence>
         </Link>
       </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Content
-          className="bg-zinc-800 text-white px-2 py-1 rounded text-sm"
+          className="z-50 overflow-hidden rounded-md border bg-white px-3 py-1.5 text-sm text-zinc-950 shadow-md animate-in fade-in-0 zoom-in-95 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
           sideOffset={5}
         >
           {title}
-          <Tooltip.Arrow className="fill-zinc-800" />
+          <Tooltip.Arrow className="fill-current" />
         </Tooltip.Content>
       </Tooltip.Portal>
     </Tooltip.Root>
@@ -57,14 +88,34 @@ NavLink.propTypes = {
   to: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
+  notificationCount: PropTypes.number,
 };
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { cartNumber, setCartNumber } = useCartNumberStore();
   const [isPlaying, setIsPlaying] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const audioRef = useRef(new Audio('/audio/sigma-boy.mp3'));
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/cart/get-cart-count`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+          },
+        });
+        if (response.data.success) {
+          setCartNumber(response.data.count);
+        }
+      } catch (error) {
+        console.error('Error getting cart count:', error);
+      }
+    };
+    fetchCart();
+  }, [cartNumber, setCartNumber]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -144,8 +195,8 @@ const Navbar = () => {
           <Shop className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
         </NavLink>
         
-        <NavLink to="/user/cart" title="My Cart">
-          <Cart className="h-6 w-6 text-zinc-700 dark:text-zinc-300" />
+        <NavLink to="/user/cart" title="My Cart" notificationCount={cartNumber}>
+          <Cart className="h-6 w-6 text-zinc-700 dark:text-zinc-400" />
         </NavLink>
         
         <NavLink to="/user/profile" title="My Profile">
