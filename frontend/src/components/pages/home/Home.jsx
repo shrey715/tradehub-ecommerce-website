@@ -207,7 +207,7 @@ const Home = () => {
         ))}
       </div>
 
-      <footer className="fixed bottom-0 w-full py-2 sm:py-4 text-center text-xs sm:text-sm text-zinc-500 bg-gradient-to-t from-black/50 to-transparent backdrop-blur-sm z-50">
+      <footer className="fixed bottom-0 w-full py-2 sm:py-4 text-center text-xs sm:text-sm text-zinc-500 z-50">
         Made by Shreyas Deb
       </footer>
     </motion.main>
