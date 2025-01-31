@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import axios from 'axios';
-import { backendUrl } from '../main';
+import axiosInstance from '../lib/api';
 import PropTypes from 'prop-types';
 
 import Loading from '../components/pages/common/Loading';
@@ -21,13 +20,8 @@ const Protected = ({ children }) => {
       }
 
       try {
-        const response = await axios.get(
-          `${backendUrl}/api/auth/verifyjwt`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
+        const response = await axiosInstance.get(
+          `/api/auth/verifyjwt`,
         );
 
         if (response.data.success) {

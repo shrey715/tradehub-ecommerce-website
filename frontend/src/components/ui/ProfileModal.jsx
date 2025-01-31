@@ -6,8 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { CiCircleRemove } from "react-icons/ci";
 
-import axios from "axios";
-import { backendUrl } from "../../main";
+import axiosInstance from "../../lib/api";
 import toast from "react-hot-toast";
 
 const EditModal = ({ setEditMode }) => {
@@ -44,15 +43,9 @@ const EditModal = ({ setEditMode }) => {
     }
 
     try {
-      const res = await axios.patch(
-        `${backendUrl}/api/user`,
+      const res = await axiosInstance.patch(
+        `/api/user`,
         { fname, lname, age, email, contact_no: contactNo },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        }
       );
 
       if (res.data.success) {
@@ -196,17 +189,10 @@ const PasswordModal = ({ setPasswordMode }) => {
       return;
     }
 
-    const token = localStorage.getItem("jwtToken");
     try {
-      const res = await axios.patch(
-        `${backendUrl}/api/user/update-password`,
+      const res = await axiosInstance.patch(
+        `/api/user/update-password`,
         { currentPassword, newPassword },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        }
       );
 
       if (res.data.success) {

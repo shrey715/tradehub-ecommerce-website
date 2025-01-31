@@ -6,8 +6,7 @@ import Sigma from './sigma';
 import PropTypes from 'prop-types';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import useCartNumberStore from '../../hooks/CartNumberStore';
-import axios from 'axios';
-import { backendUrl } from '../../main';
+import axiosInstance from '../../lib/api';
 
 const BurgerMenu = [
   {
@@ -102,11 +101,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/cart/get-cart-count`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
-          },
-        });
+        const response = await axiosInstance.get(`/api/cart/get-cart-count`);
         if (response.data.success) {
           setCartNumber(response.data.count);
         }

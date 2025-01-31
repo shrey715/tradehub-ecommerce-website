@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 
 import useItemStore from '../../../hooks/ItemStore';
 
-import axios from 'axios';
-import { backendUrl } from '../../../main';
+import axiosInstance from '../../../lib/api';
 import toast from 'react-hot-toast';
 
 import { CiSearch } from 'react-icons/ci';
@@ -149,9 +148,7 @@ const BuyItems = () => {
       try {
         const token = localStorage.getItem('jwtToken');
         if (token) {
-          const res = await axios.get(`${backendUrl}/api/items/all`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const res = await axiosInstance.get('/api/items/all');
 
           if (res.data.success) {
             setItems(res.data.items);

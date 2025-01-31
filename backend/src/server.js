@@ -26,9 +26,18 @@ connectDB();
 connectCloudinary();
 
 // middlewares
-app.use(cors());
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+        'Origin',
+        'Content-Type',
+        'Accept',
+        'Authorization',
+        'X-Requested-With'
+    ],
+    exposedHeaders: ['Content-Range', 'X-Content-Range']
 }));
 app.use(express.json());
 app.use(handleMulterError);

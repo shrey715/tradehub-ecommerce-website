@@ -2,8 +2,7 @@ import { motion } from 'motion/react';
 import { Helmet } from 'react-helmet';
 import { useEffect, useState } from 'react';
 
-import axios from 'axios';
-import { backendUrl } from '../../../main';
+import axiosInstance from '../../../lib/api';
 import { Link, useNavigate } from 'react-router';
 
 import { CiEdit, CiTrash } from 'react-icons/ci';
@@ -22,10 +21,7 @@ const MyListing = () => {
     const fetchListings = async () => {
       try {
         setIsLoading(true);
-        const token = localStorage.getItem('jwtToken');
-        const response = await axios.get(`${backendUrl}/api/items/my-listings`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await axiosInstance.get(`/api/items/my-listings`);
         setListings(response.data.items);
       } catch (error) {
         toast.error('Failed to fetch listings');
@@ -42,10 +38,7 @@ const MyListing = () => {
     if (!window.confirm('Are you sure you want to delete this listing?')) return;
     
     try {
-      const token = localStorage.getItem('jwtToken');
-      await axios.delete(`${backendUrl}/api/items/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await axiosInstance.delete(`/api/items/${id}`);
       setListings(listings.filter(item => item._id !== id));
       toast.success('Listing deleted successfully');
     } catch (error) {

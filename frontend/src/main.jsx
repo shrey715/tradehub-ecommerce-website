@@ -24,10 +24,6 @@ import ItemDeliveryPage from './components/pages/items/ItemDeliveryPage';
 import MyListing from './components/pages/items/MyListing';
 
 import Order from './components/pages/orders/Order';
-import MyPlaced from './components/pages/orders/MyPlaced';
-import MyCompleted from './components/pages/orders/MyCompleted';
-import SaleCompleted from './components/pages/orders/SaleCompleted';
-import SalePlaced from './components/pages/orders/SalePlaced';
 
 import SellerProfile from './components/pages/seller/SellerProfile';
 
@@ -83,22 +79,7 @@ createRoot(document.getElementById('root')).render(
             </Protected>
           }
         >
-          <Route path="" element={<Order />}>
-            <Route path="my/*">
-              <Route path="placed" element={<MyPlaced />} />
-              <Route path="completed" element={<MyCompleted />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-
-            <Route path="sale/*">
-              <Route path="placed" element={<SalePlaced />} />
-              <Route path="completed" element={<SaleCompleted />} />
-              <Route path="*" element={<NotFound />} />
-            </Route>
-
-            <Route path="*" element={<NotFound />} />
-          </Route>
-          
+          <Route path="" element={<Order />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

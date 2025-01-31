@@ -1,18 +1,16 @@
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 
-import axios from "axios";
-import { backendUrl } from "../../../main";
+import axiosInstance from "../../../lib/api";
 
 import toast from "react-hot-toast";
 import Loading from "../common/Loading";
 
 const ItemDeliveryPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [otp, setOtp] = useState('');
@@ -21,11 +19,8 @@ const ItemDeliveryPage = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       setLoading(true);
-      const token = localStorage.getItem("jwtToken");
       try {
-        const res = await axios.get(`${backendUrl}/api/orders/fetch-order/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axiosInstance.get(`/api/orders/fetch-order/${id}`);
 
         if (res.data.success) {
           setOrder(res.data.order);
@@ -44,17 +39,12 @@ const ItemDeliveryPage = () => {
   }, [id]);
 
   const verifyOrder = async (otp) => {
-    const token = localStorage.getItem("jwtToken");
     try {
-      const res = await axios.post(
-        `${backendUrl}/api/orders/verify-otp`,
-        { order_id: id, otp },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await axiosInstance.post(`/api/orders/verify-otp`, { order_id: id, otp });
 
       if (res.data.success) {
         toast.success("Order verified successfully");
-        navigate("/orders/sale/completed");
+        window.location.reload();
       } else {
         toast.error(res.data.message);
       }

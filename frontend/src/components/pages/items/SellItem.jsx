@@ -9,8 +9,7 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
-import axios from "axios";
-import { backendUrl } from "../../../main";
+import axiosInstance from '../../../lib/api';
 import { convertToBase64 } from "../../../lib/convert";
 
 import { motion } from "framer-motion";
@@ -95,13 +94,7 @@ const SellItem = () => {
       const category = item.category.join(",");
       const formData = { ...item, image: base64Image, category };
 
-      const token = localStorage.getItem("jwtToken");
-      const response = await axios.post(`${backendUrl}/api/items`, formData, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axiosInstance.post(`/api/items`, formData);
 
       if (response.data.success) {
         toast.success("Item added successfully!");

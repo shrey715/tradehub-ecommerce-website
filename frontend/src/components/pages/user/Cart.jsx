@@ -6,8 +6,7 @@ import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import useCartNumberStore from "../../../hooks/CartNumberStore";
 
-import axios from "axios";
-import { backendUrl } from "../../../main";
+import axiosInstance from "../../../lib/api";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
@@ -16,11 +15,8 @@ const Cart = () => {
 
   useEffect(() => {
     const getCart = async () => {
-      const token = localStorage.getItem("jwtToken");
       try {
-        const res = await axios.get(`${backendUrl}/api/cart/get-cart`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axiosInstance.get(`/api/cart/get-cart`);
 
         if (res.data.success) {
           setCart(res.data.cart.items);
@@ -45,12 +41,10 @@ const Cart = () => {
   }, [cart]);
 
   const removeFromCart = async (itemID) => {
-    const token = localStorage.getItem("jwtToken");
     try {
-      const res = await axios.patch(
-        `${backendUrl}/api/cart/remove-from-cart/${itemID}`,
+      const res = await axiosInstance.patch(
+        `/api/cart/remove-from-cart/${itemID}`,
         { item_id: itemID },
-        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (res.data.success) {
@@ -67,17 +61,13 @@ const Cart = () => {
   };
 
   const clearCart = async () => {
-    const token = localStorage.getItem("jwtToken");
-
     if (cart.length === 0) {
       toast.error("Cart is already empty");
       return;
     }
 
     try {
-      const res = await axios.delete(`${backendUrl}/api/cart/clear-cart`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axiosInstance.delete(`/api/cart/clear-cart`);
 
       if (res.data.success) {
         setCartNumber(0);
@@ -93,10 +83,9 @@ const Cart = () => {
   };
 
   const placeOrder = async () => {
-    const token = localStorage.getItem("jwtToken");
     try {
-      const res = await axios.post(
-        `${backendUrl}/api/orders/place-order`,
+      const res = await axiosInstance.post(
+        `/api/orders/place-order`,
         {
           orders: cart.map((item) => ({
             item_id: item._id,
@@ -104,7 +93,6 @@ const Cart = () => {
             amount: item.price * item.quantity,
           })),
         },
-        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (res.data.success) {

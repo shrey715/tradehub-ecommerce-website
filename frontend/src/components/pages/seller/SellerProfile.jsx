@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Helmet } from "react-helmet";
 
-import axios from "axios";
+import axiosInstance from "../../../lib/api";
+
 import { FaStar } from "react-icons/fa";
-import { backendUrl } from "../../../main";
 
 import toast from "react-hot-toast";
 import Loading from "../common/Loading";
@@ -24,14 +24,11 @@ const SellerProfile = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwtToken");
-    const headers = { Authorization: `Bearer ${token}` };
-
     const fetchData = async () => {
       try {
         const [sellerRes, reviewsRes] = await Promise.all([
-          axios.get(`${backendUrl}/api/user/seller/${id}`, { headers }),
-          axios.get(`${backendUrl}/api/reviews/${id}?page=${currentPage}`, { headers })
+          axiosInstance.get(`/api/user/seller/${id}`),
+          axiosInstance.get(`/api/reviews/${id}?page=${currentPage}`)
         ]);
 
         setSeller(sellerRes.data.seller);
@@ -59,25 +56,16 @@ const SellerProfile = () => {
     setIsSubmitting(true);
 
     try {
-      const token = localStorage.getItem("jwtToken");
-      await axios.post(
-        `${backendUrl}/api/reviews/add-review`,
+      await axiosInstance.post(
+        `/api/reviews/add-review`,
         {
           reviewee_id: id,
           ...newReview
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+        });
 
       const [sellerRes, reviewsRes] = await Promise.all([
-        axios.get(`${backendUrl}/api/user/seller/${id}`, { 
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        axios.get(`${backendUrl}/api/reviews/${id}?page=1`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        axiosInstance.get(`/api/user/seller/${id}`),
+        axiosInstance.get(`/api/reviews/${id}?page=1`)
       ]);
 
       setSeller(sellerRes.data.seller);

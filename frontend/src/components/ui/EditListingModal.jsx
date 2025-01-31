@@ -8,8 +8,7 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 import FilePondPluginImageResize from 'filepond-plugin-image-resize';
 
-import axios from 'axios';
-import { backendUrl } from '../../main';
+import axiosInstance from '../../lib/api';
 import PropTypes from 'prop-types';
 
 import toast from 'react-hot-toast';
@@ -78,16 +77,9 @@ const EditListingModal = ({ listing, setEditMode, onUpdate }) => {
         ...(imageData && { image: imageData })
       };
       
-      const token = localStorage.getItem('jwtToken');
-      const response = await axios.patch(
-        `${backendUrl}/api/items/${listing._id}`,
+      const response = await axiosInstance.patch(
+        `/api/items/${listing._id}`,
         updateData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
       );
   
       if (response.data.success) {

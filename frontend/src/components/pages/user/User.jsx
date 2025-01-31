@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect } from 'react';
 import useUserStore from '../../../hooks/UserStore';
 
@@ -7,7 +6,7 @@ import Navbar from '../../ui/navbar';
 
 import toast from 'react-hot-toast';
 
-import { backendUrl } from '../../../main';
+import axiosInstance from '../../../lib/api';
 import { Outlet } from 'react-router';
 
 const User = () => {
@@ -19,9 +18,7 @@ const User = () => {
       const token = localStorage.getItem('jwtToken');
       if (token) {
         try {
-          const res = await axios.get(`${backendUrl}/api/user`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const res = await axiosInstance.get(`/api/user`);
           setUser(res.data.user);
         } catch (error) {
           console.error('Error fetching user data:', error);

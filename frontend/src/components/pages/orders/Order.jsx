@@ -1,29 +1,28 @@
 import { Helmet } from "react-helmet";
 import { motion } from "motion/react";
 
-import axios from "axios";
-import { Outlet, useNavigate } from "react-router";
-import { backendUrl } from "../../../main";
+import axiosInstance from "../../../lib/api";
 
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 import useOrderStore from "../../../hooks/OrderStore";
 
+import MyCompleted from "./MyCompleted";
+import MyPlaced from "./MyPlaced";
+import SaleCompleted from "./SaleCompleted";
+import SalePlaced from "./SalePlaced";
+
 const Order = () => {
   const { orders, setOrders, sellerOrders, setSellerOrders } = useOrderStore();
   const [ loading, setLoading ] = useState(false);
-  const navigate = useNavigate();
+  const [ selected, setSelected ] = useState('main');
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const token = localStorage.getItem('jwtToken');
       try {
         setLoading(true);
 
-        const res = await axios.get(`${backendUrl}/api/orders/fetch-orders`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
+        const res = await axiosInstance.get(`/api/orders/fetch-orders`);
         if (res.data.success) {
           setOrders(res.data.orders);
           setSellerOrders(res.data.sellerOrders);
@@ -64,25 +63,25 @@ const Order = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button
-            onClick={() => navigate('/orders/my/placed')}
+            onClick={() => setSelected('my-placed')}
             className="w-full p-4 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors"
           >
             My Placed Orders
           </button>
           <button
-            onClick={() => navigate('/orders/my/completed')}
+            onClick={() => setSelected('my-completed')}
             className="w-full p-4 text-sm font-medium rounded-lg bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800 transition-colors"
           >
             My Completed Orders
           </button>
           <button
-            onClick={() => navigate('/orders/sale/placed')}
+            onClick={() => setSelected('sale-placed')}
             className="w-full p-4 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors"
           >
             Customer Placed Orders
           </button>
           <button
-            onClick={() => navigate('/orders/sale/completed')}
+            onClick={() => setSelected('sale-completed')}
             className="w-full p-4 text-sm font-medium rounded-lg bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800 transition-colors"
           >
             Customer Completed Orders
@@ -102,7 +101,16 @@ const Order = () => {
             </div>
           ) : (
             <div className="p-6">
-              <Outlet />
+              {selected === 'main' && (
+                <div className="flex flex-col items-center justify-center p-12 space-y-2">
+                  <p className="text-xl font-medium text-zinc-900 dark:text-zinc-50">Welcome to Orders</p>
+                  <p className="text-zinc-500 dark:text-zinc-400">Continue by selecting any tab above</p>
+                </div>
+              )}
+              {selected === 'my-placed' && <MyPlaced orders={orders} />}
+              {selected === 'my-completed' && <MyCompleted orders={orders} />}
+              {selected === 'sale-placed' && <SalePlaced orders={sellerOrders} />}
+              {selected === 'sale-completed' && <SaleCompleted orders={sellerOrders} />}
             </div>
           )}
         </div>

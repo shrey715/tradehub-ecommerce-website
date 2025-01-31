@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
 
-import axios from "axios";
-import { backendUrl } from "../../../main";
+import axiosInstance from "../../../lib/api";
 import { useNavigate } from "react-router";
 
 import { useEffect } from "react";
@@ -16,13 +15,8 @@ const DeliverItems = () => {
 
   useEffect(() => {
     const fetchSellerOrders = async () => {
-      const token = localStorage.getItem('jwtToken');
       try {
-        const res = await axios.get(`${backendUrl}/api/orders/fetch-seller-orders`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const res = await axiosInstance.get('/api/orders/fetch-seller-orders');
 
         if (res.data.success) {
           setSellerOrders(res.data.sellerOrders);

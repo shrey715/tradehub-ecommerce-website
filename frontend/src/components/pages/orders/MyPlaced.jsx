@@ -1,7 +1,8 @@
 import useOrderStore from "../../../hooks/OrderStore";
 import { Helmet } from "react-helmet";
-import axios from "axios";
-import { backendUrl } from "../../../main";
+
+import axiosInstance from "../../../lib/api";
+
 import { motion } from "motion/react";
 import toast from "react-hot-toast";
 
@@ -9,13 +10,8 @@ const MyPlaced = () => {
   const { orders } = useOrderStore();
 
   const handleRegenerateOTP = async (order_id) => {
-    const token = localStorage.getItem('jwtToken');
     try {
-      const res = await axios.get(`${backendUrl}/api/orders/regenerate-otp/${order_id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const res = await axiosInstance.get(`/api/orders/regenerate-otp/${order_id}`);
 
       if (res.data.success) {
         toast.success("The OTP is: "+ res.data.otp, {

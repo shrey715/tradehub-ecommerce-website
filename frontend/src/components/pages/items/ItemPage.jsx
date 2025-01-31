@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { backendUrl } from '../../../main';
+import axiosInstance from '../../../lib/api';
+
 import { useParams } from 'react-router';
 import { Link, useNavigate } from 'react-router';
 import { CgSpinnerTwoAlt as LoadingIcon } from 'react-icons/cg';
@@ -27,12 +27,9 @@ const ItemPage = () => {
 
   useEffect(() => {
     const checkCartStatus = async () => {
-      const token = localStorage.getItem('jwtToken');
       try {
-        const res = await axios.get(`${backendUrl}/api/cart/get-cart`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
+        const res = await axiosInstance.get(`/api/cart/get-cart`);
+
         if (res.data.success) {
           const cartItem = res.data.cart.items.find(i => i._id === id);
           setIsInCart(!!cartItem);
@@ -51,13 +48,10 @@ const ItemPage = () => {
       return;
     }
     setLoading(true);
-    const token = localStorage.getItem('jwtToken');
     try {
-      const res = await axios.post(`${backendUrl}/api/cart/add-to-cart`, {
+      const res = await axiosInstance.post(`/api/cart/add-to-cart`, {
         item_id: item._id,
         quantity
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (res.data.success) {
@@ -81,16 +75,13 @@ const ItemPage = () => {
       return;
     }
     setLoading(true);
-    const token = localStorage.getItem('jwtToken');
     try {
-      const res = await axios.post(`${backendUrl}/api/orders/place-order`, {
+      const res = await axiosInstance.post(`/api/orders/place-order`, {
         orders: [{
           item_id: item._id,
           quantity,
           amount: item.price * quantity
         }]
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
       });
 
       if (res.data.success) {
@@ -118,9 +109,7 @@ const ItemPage = () => {
         }
         
         if (token) {
-          const res = await axios.get(`${backendUrl}/api/items/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const res = await axiosInstance.get(`/api/items/${id}`);
 
           if(res.data.success) {
             setItem(res.data.item);

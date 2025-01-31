@@ -11,8 +11,7 @@ import { Link, useNavigate } from "react-router";
 import { FaRegCheckCircle, FaArrowCircleLeft } from "react-icons/fa";
 import { motion, AnimatePresence } from "motion/react";
 
-import axios from "axios";
-import { backendUrl } from "../../../main";
+import axiosInstance from "../../../lib/api";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -56,7 +55,7 @@ const Register = () => {
       return;
     }
 
-    await axios.post(`${backendUrl}/api/auth/register`, data)
+    await axiosInstance.post(`/api/auth/register`, data)
       .then(res => {
         if(res.data.success) {
           toast.success("Registration successful");
@@ -199,7 +198,7 @@ const Login = () => {
       data[key] = value;
     }
 
-    await axios.post(`${backendUrl}/api/auth/login`, data)
+    await axiosInstance.post(`/api/auth/login`, data)
       .then(res => {
         if (res.data.success) {
           toast.success("Login successful");
@@ -314,14 +313,7 @@ const AuthLayout = () => {
     if (token) {
       const verifyToken = async () => {
         try {
-          const response = await axios.get(
-            `${backendUrl}/api/auth/verifyjwt`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await axiosInstance.get(`/api/auth/verifyjwt`);
 
           if (response.data.success) {
             navigate('/user/profile');
