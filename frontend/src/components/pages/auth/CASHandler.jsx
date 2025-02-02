@@ -54,8 +54,10 @@ const CASHandler = () => {
           localStorage.setItem('jwtToken', response.data.token);
           setStatus('success');
           toast.success('Successfully logged in');
-          toast.error('Default attributes are set, kindly update your profile.');
-          toast.error('Temporary password is "CAS". Please change it immediately.');
+          if(response.data.isNewUser) {
+            toast.error('Default attributes are set, kindly update your profile.');
+            toast.error('Temporary password is "CAS". Please change it immediately.');
+          }
           setTimeout(() => navigate('/user/profile'), 3000);
         }
       } catch (error) {
