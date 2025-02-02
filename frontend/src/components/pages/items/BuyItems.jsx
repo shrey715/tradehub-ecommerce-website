@@ -32,7 +32,7 @@ const ItemCard = ({ item }) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className="group rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:shadow-lg transition-all duration-200"
+      className="group rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden hover:shadow-lg cursor-pointer transition-all duration-200"
       onClick={() => navigate(`/item/${item._id}`)}
     >
       <div className="aspect-square overflow-hidden">

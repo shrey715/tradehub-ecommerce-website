@@ -1,12 +1,55 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/User.js'; 
+import axios from 'axios';
+import { XMLParser } from 'fast-xml-parser';
+
+// helper to verify recaptcha
+const verifyRecaptcha = async (token) => {
+  const response = await axios.post(
+    `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${token}`
+  );
+  return response.data.success;
+};
+
+// helper to verify CAS
+const verifyCAS = async (serviceUrl, ticket) => {
+  const casUrl = "https://login.iiit.ac.in/cas";
+  const casValidateUrl = `${casUrl}/serviceValidate?ticket=${encodeURIComponent(ticket)}&service=${serviceUrl}`;
+
+  const response = await axios.get(casValidateUrl);
+  const data = response.data;
+  const parser = new XMLParser();
+  const jsonData = parser.parse(data);
+
+  const casResponse = jsonData['cas:serviceResponse'];
+  if (casResponse['cas:authenticationFailure']) {
+    return {
+      success: false,
+      message: 'CAS authentication failed',
+    };
+  }
+
+  return {
+    success: true,
+    message: 'CAS authentication successful',
+    user: casResponse['cas:authenticationSuccess']
+  }
+};
 
 // route for user registration
 const register = async (req, res) => {
   console.log('Request for user registration received');
   try {
-    const { fname, lname, age, email, contact_no, password } = req.body;
+    const { fname, lname, age, email, contact_no, password, recaptchaToken } = req.body;
+
+    // validating captcha token
+    const isRecaptchaValid = await verifyRecaptcha(recaptchaToken);
+    if (!isRecaptchaValid) {
+      return res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' });
+    }
+
+    console.log('reCAPTCHA verification successful: ', isRecaptchaValid);
 
     // check if user already exists
     const existsUser = await User.findOne({ email });
@@ -38,7 +81,13 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   console.log('Request for user login received');
   try {
-    const { email, password } = req.body;
+    const { email, password, recaptchaToken } = req.body;
+
+    // validating captcha token
+    const isRecaptchaValid = await verifyRecaptcha(recaptchaToken);
+    if (!isRecaptchaValid) {
+      return res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' });
+    }
 
     // check if user exists
     const user = await User.findOne({ email });
@@ -90,8 +139,79 @@ const verifyjwt = async (req, res) => {
   }  
 }
 
+// route for CAS callback
+const casCallback = async (req, res) => {
+  console.log('Request for CAS callback received');
+  try {
+    const ticket = req.query.ticket;
+    if (!ticket) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'No ticket provided' 
+      });
+    }
+
+    const serviceUrl = encodeURIComponent(`${process.env.FRONTEND_URL}/auth/cas`);
+    const response = await verifyCAS(serviceUrl, ticket);
+
+    if (!response.success) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'CAS authentication failed' 
+      });
+    }
+
+    const casResponse = response.user;
+
+    const user = casResponse['cas:attributes'];
+    const email = user['cas:E-Mail'];
+    const fname = user['cas:FirstName'];
+    const lname = user['cas:LastName'];
+    
+    const exists = await User.findOne({ email });
+
+    if (!exists) {
+      const newUser = new User({
+        fname: fname,
+        lname: lname,
+        email: email,
+        age: 18,
+        contact_no: '0000000000',
+        password: 'CAS'
+      });
+    
+      await newUser.save();
+
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      res.status(200).json({ 
+        success: true, 
+        message: 'CAS authentication successful',
+        isNewUser: true,
+        token
+      });
+    } else {
+      const token = jwt.sign({ id: exists._id }, process.env.JWT_SECRET);
+
+      res.status(200).json({ 
+        success: true, 
+        message: 'CAS authentication successful',
+        isNewUser: false,
+        token
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'CAS authentication failed',
+      error: error.message
+    });
+  }
+};
+
 export {
   register,
   login,
-  verifyjwt
+  verifyjwt,
+  casCallback
 };

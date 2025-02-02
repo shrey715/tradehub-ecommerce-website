@@ -6,7 +6,9 @@ import { useEffect, useState, useRef } from 'react';
 import { CiPaperplane } from "react-icons/ci";
 import Loading from '../common/Loading';
 
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+// const apiKey = null;
+const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ 
   model: "gemini-1.5-flash",
   safetySettings: [
@@ -174,7 +176,7 @@ const Support = () => {
                   <img 
                     src="/images/frog.png" 
                     alt="Nagu" 
-                    className="w-6 h-6 rounded-full flex-shrink-0"
+                    className="w-8 h-8 rounded-full flex-shrink-0 border border-zinc-800 p-0.5"
                   />
                 )}
                 <div 
@@ -191,6 +193,19 @@ const Support = () => {
               </div>
             ))}
             {loading && <TypingIndicator />}
+            {!apiKey && (
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 p-4 text-center">
+                <p>
+                  To enable chat support, you need to provide a valid API key for the Google Generative AI model.
+                </p>
+                <p>
+                  Get your API key from the <a href="https://console.cloud.google.com/apis/library/generativeai.googleapis.com" target="_blank" rel="noopener noreferrer" className="text-blue-500 dark:text-blue-400">Google Cloud Console</a>.
+                </p>
+                <p>
+                  Add the API key to your environment variables as <code>VITE_GEMINI_API_KEY</code>.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

@@ -19,6 +19,9 @@ import reviewRoutes from './routes/reviewRoutes.js';
 dotenv.config();
 
 const port = process.env.PORT || 4000; 
+const allowed_origins = [
+    process.env.FRONTEND_URL
+]
 
 // app config
 const app = express();
@@ -27,7 +30,7 @@ connectCloudinary();
 
 // middlewares
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: allowed_origins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: [

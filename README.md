@@ -31,17 +31,15 @@ at IIIT Hyderabad. The platform is built using MERN stack.
 ## How to run
 
 - Clone the repository
-- Run `npm install` in both the `frontend` and `backend` directories
+- Run `npm install` in the `root`, `frontend` and `backend` directories
 - Create a `.env` file in the `backend` directory and add the following environment variables:
     - `MONGO_URI`: MongoDB connection string
     - `JWT_SECRET`: Secret key for JWT
     - `CLOUDINARY_CLOUD_NAME`: Cloudinary cloud name
     - `CLOUDINARY_API_KEY`: Cloudinary API key
     - `CLOUDINARY_API_SECRET`: Cloudinary API secret
-- Run `npm run dev` in the `backend` directory
 - Create a `.env` file in the `frontend` directory and add the following environment variables:
     - `VITE_BACKEND_URL`: Backend API URL
     - `VITE_GEMINI_API_KEY`: Gemini API key for chat support
-- Run `npm run dev` in the `frontend` directory
+- Run `npm run start` in the root directory.
 - Open `http://localhost:5173` in your browser
-

@@ -7,7 +7,12 @@ import './index.css';
 import { Toaster } from 'react-hot-toast';
 
 import NotFound from './components/pages/common/NotFound';
-import { AuthLayout, Login, Register, Logout } from './components/pages/auth/Auth';
+import Register from './components/pages/auth/Register';
+import Login from './components/pages/auth/Login';
+import Logout from './components/pages/auth/Logout';
+import AuthLayout from './components/pages/auth/AuthLayout';
+import CASHandler from './components/pages/auth/CASHandler';
+
 import Home from './components/pages/home/Home';
 
 import Protected from './hooks/Protected';
@@ -35,10 +40,12 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        
         <Route path="/auth/*" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="logout" element={<Logout />} />
+          <Route path="cas" element={<CASHandler />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

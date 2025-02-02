@@ -140,7 +140,4 @@ const getSellerDetails = async (req, res) => {
   }
 };
 
-// route for CAS registration
-
-
 export { getCurrentUser, updateCurrentUser, getUserID, getSellerDetails, updatePassword };
