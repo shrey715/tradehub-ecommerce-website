@@ -5,26 +5,10 @@ export default {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: [
-  				'Noto Sans',
-  				'sans-serif'
-  			],
-  			cursive: [
-  				'Pacifico',
-  				'cursive'
-  			],
-  			rubik: [
-  				'Rubik',
-  				'sans-serif'
-  			],
   			title: [
   				'Barriecito',
   				'sans-serif'
   			],
-  			poppins: [
-  				'Poppins',
-  				'sans-serif'
-  			]
   		},
 		scrollbar: ['rounded']
   	}
