@@ -7,7 +7,7 @@ import { CiPaperplane } from "react-icons/ci";
 import Loading from '../common/Loading';
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-// const apiKey = null;
+
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ 
   model: "gemini-1.5-flash",
