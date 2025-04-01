@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
+// import { useRef } from "react";
 
 import { FaArrowCircleLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'motion/react';
@@ -13,8 +14,9 @@ const Login = () => {
   const navigate = useNavigate(); 
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const recaptchaRef = useRef(null);
-  const siteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
+  // const recaptchaRef = useRef(null);
+  // const siteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
+  // console.log(siteKey);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -27,16 +29,18 @@ const Login = () => {
       setIsSubmitting(true);
       const form = document.getElementById('login-form');
       const formData = new FormData(form);
-      const recaptchaValue = recaptchaRef.current?.getValue();
+      // const recaptchaValue = recaptchaRef.current?.getValue();
 
+      /*
       if (!recaptchaValue) {
         toast.error("Please complete the reCAPTCHA");
         return;
       }
+      */
 
       const data = {
         ...Object.fromEntries(formData.entries()),
-        recaptchaToken: recaptchaValue
+        // recaptchaToken: recaptchaValue
       };
 
       const res = await axiosInstance.post(`/api/auth/login`, data);
@@ -48,7 +52,7 @@ const Login = () => {
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Login failed");
-      recaptchaRef.current?.reset();
+      // recaptchaRef.current?.reset();
     } finally {
       setIsSubmitting(false);
     }
@@ -123,11 +127,11 @@ const Login = () => {
             </AnimatePresence>
           </button>
         </div>
-          <ReCAPTCHA
+          {/* <ReCAPTCHA
           ref={recaptchaRef}
           sitekey={siteKey}
           className="flex justify-center my-4"
-        />
+        /> */}
 
         <button
           type="submit"

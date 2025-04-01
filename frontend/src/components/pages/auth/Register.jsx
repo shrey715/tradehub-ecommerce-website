@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
 
 import toast from "react-hot-toast";
@@ -10,14 +10,15 @@ import { FaArrowCircleLeft } from "react-icons/fa";
 import { motion, AnimatePresence } from "motion/react";
 
 import axiosInstance from "../../../lib/api";
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
+// import { useRef } from "react";
 
 const Register = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const recaptchaRef = useRef(null);
-  const siteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
+  // const recaptchaRef = useRef(null);
+  // const siteKey = import.meta.env.VITE_CAPTCHA_SITE_KEY;
   
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -28,16 +29,18 @@ const Register = () => {
 
     const form = document.getElementById('register-form');
     const formData = new FormData(form);
-    const recaptchaValue = recaptchaRef.current.getValue();
+    // const recaptchaValue = recaptchaRef.current.getValue();
 
+    /*
     if (!recaptchaValue) {
       toast.error("Please complete the reCAPTCHA");
       return;
     }
+    */
 
     const data = {
       ...Object.fromEntries(formData.entries()),
-      recaptchaToken: recaptchaValue
+      // recaptchaToken: recaptchaValue
     };
 
     console.log(data);
@@ -179,11 +182,11 @@ const Register = () => {
             </AnimatePresence>
           </button>
         </div>
-        <ReCAPTCHA
+        {/* <ReCAPTCHA
           ref={recaptchaRef}
           sitekey={siteKey}
           className="flex justify-center my-4"
-        />
+        /> */}
         <button
           type="submit"
           disabled={isSubmitting}

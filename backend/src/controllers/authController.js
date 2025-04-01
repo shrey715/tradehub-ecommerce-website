@@ -5,12 +5,14 @@ import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
 
 // helper to verify recaptcha
+/* 
 const verifyRecaptcha = async (token) => {
   const response = await axios.post(
     `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.CAPTCHA_SECRET_KEY}&response=${token}`
   );
   return response.data.success;
 };
+*/
 
 // helper to verify CAS
 const verifyCAS = async (serviceUrl, ticket) => {
@@ -43,6 +45,7 @@ const register = async (req, res) => {
   try {
     const { fname, lname, age, email, contact_no, password, recaptchaToken } = req.body;
 
+    /* 
     // validating captcha token
     const isRecaptchaValid = await verifyRecaptcha(recaptchaToken);
     if (!isRecaptchaValid) {
@@ -50,6 +53,7 @@ const register = async (req, res) => {
     }
 
     console.log('reCAPTCHA verification successful: ', isRecaptchaValid);
+    */
 
     // check if user already exists
     const existsUser = await User.findOne({ email });
@@ -83,11 +87,13 @@ const login = async (req, res) => {
   try {
     const { email, password, recaptchaToken } = req.body;
 
+    /* 
     // validating captcha token
     const isRecaptchaValid = await verifyRecaptcha(recaptchaToken);
     if (!isRecaptchaValid) {
       return res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' });
     }
+    */
 
     // check if user exists
     const user = await User.findOne({ email });
