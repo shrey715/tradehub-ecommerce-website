@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router';
-
 import { motion } from 'motion/react';
 import axiosInstance from '../../../lib/api';
 
@@ -19,6 +18,7 @@ const AuthLayout = () => {
           }
         } catch (error) {
           console.error('Error verifying token:', error);
+          localStorage.removeItem('jwtToken');
         }
       }
 
@@ -33,10 +33,12 @@ const AuthLayout = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     > 
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-none"></div>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
       <div className="flex justify-center items-center p-4 sm:p-8 min-h-screen relative">
-        <div className="bg-zinc-100 dark:bg-zinc-900/95 p-6 rounded-xl shadow-2xl w-full max-w-md backdrop-blur-sm border border-zinc-200/20 dark:border-zinc-700/20">
-          <Outlet />
+        <div className="bg-white dark:bg-zinc-900 p-8 rounded-2xl shadow-2xl w-full max-w-md backdrop-blur-sm border border-white/10 dark:border-zinc-800/50">
+          <div className="">
+            <Outlet />
+          </div>
         </div>
       </div>
     </motion.main>

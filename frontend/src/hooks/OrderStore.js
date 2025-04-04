@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 
 const useOrderStore = create((set) => ({
-  sellerOrders: {},
-  orders: {},
-  setSellerOrders: (sellerOrders) => set({ sellerOrders }),
+  orders: [],
+  sellerOrders: [],
   setOrders: (orders) => set({ orders }),
+  setSellerOrders: (sellerOrders) => set({ sellerOrders }),
 }));
 
 export default useOrderStore;
